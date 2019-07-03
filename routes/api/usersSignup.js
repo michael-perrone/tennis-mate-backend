@@ -5,7 +5,7 @@ const router = express.Router();
 // desc register user
 // access public
 router.post("/", (req, res) => {
-  res.send("User route");
+  console.log(req.body);
 });
 
 module.exports = router;
