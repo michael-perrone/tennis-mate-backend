@@ -34,10 +34,10 @@ router.post(
         };
         const newErrors = [...errors.array(false), passConfirmError];
         if (newErrors.length !== 0) {
-          return res.status(422).json({ errors: newErrors });
+          return res.status(400).json({ errors: newErrors });
         }
       } else {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(400).json({ errors: errors.array() });
       }
     } else {
       res.status(200).json({ success: "Thanks for registering" });
