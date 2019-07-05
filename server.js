@@ -5,7 +5,7 @@ const connectedDatabase = require("./config/db");
 const TennisClub = require("./models/TennisClubSignUp");
 
 app.use(cors());
-//connectedDatabase();
+connectedDatabase();
 
 app.use(express.json({ extended: false }));
 
