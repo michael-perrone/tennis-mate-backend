@@ -5,7 +5,7 @@ const connectedDatabase = require("./config/db");
 const TennisClub = require("./models/TennisClubSignUp");
 
 app.use(cors());
-connectedDatabase();
+//connectedDatabase();
 
 app.use(express.json({ extended: false }));
 
@@ -15,6 +15,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/usersSignup", require("./routes/api/usersSignup"));
 app.use("/api/auth", require("./routes/api/auth"));
+app.use("/api/instructorSignup", require("./routes/api/instructorSignup"));
 app.use("/api/posts", require("./routes/api/posts"));
 app.use("/api/profile", require("./routes/api/profile"));
 
