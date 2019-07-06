@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult, body } = require("express-validator");
 
+const Instructor = require("../../models/Instructor");
+
 //@route POST api/users
 // desc register user
 // access public

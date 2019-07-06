@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const connectedDatabase = require("./config/db");
-const TennisClub = require("./models/TennisClubSignUp");
 
 app.use(cors());
 connectedDatabase();
