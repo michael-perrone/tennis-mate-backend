@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
-const UserSchema = new mongoose.Schema({
+const AdminSchema = new mongoose.Schema({
+  tennisClubAdminOf: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "tennisClub"
+  },
   firstName: {
     type: String,
     required: true
@@ -11,26 +15,17 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
     required: true
   },
   phoneNumber: {
     type: String,
     required: true
   },
-  age: {
-    type: String
-  },
-  gender: {
-    type: String
-  },
-  skillLevel: {
-    type: String
+  password: {
+    type: String,
+    required: true
   }
 });
+const Admin = mongoose.model("admin", AdminSchema);
 
-module.exports = User = mongoose.model("user", UserSchema);
+module.exports = Admin;
