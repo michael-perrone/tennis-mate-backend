@@ -1,30 +1,37 @@
 const mongoose = require("mongoose");
 
 const InstructorSignUpSchema = new mongoose.Schema({
-  instructorName: {
+  firstName: {
     type: String,
     required: true
   },
-  instructorEmail: {
+  lastName: {
     type: String,
     required: true
   },
-  instructorPassword: {
+  email: {
     type: String,
     required: true
   },
-  worksAtTennisClub: {
-    type: Boolean,
+  phoneNumber: {
+    type: String,
     required: true
   },
-  tennisClubName: {
+  password: {
+    type: String,
+    required: true
+  },
+  tennisClub: {
     type: String
   },
-  currentLocation: {
+  age: {
+    type: String
+  },
+  gender: {
     type: String
   }
 });
 
-const Instructor = mongoose.model("instructorSignUp", InstructorSignUpSchema);
+const Instructor = mongoose.model("instructor", InstructorSignUpSchema);
 
 module.exports = Instructor;

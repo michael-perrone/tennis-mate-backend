@@ -44,14 +44,13 @@ router.post(
     } else {
       try {
         let user = await User.findOne({ email: req.body.email });
-
         if (user) {
           return res
             .status(400)
             .json({ errors: [{ msg: "That email is already being used" }] });
         }
 
-        console.log(req.body.firstName);
+        console.log(req.body.gender);
 
         let newUser = new User({
           firstName: req.body.firstName,
