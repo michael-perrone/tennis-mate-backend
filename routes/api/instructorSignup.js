@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 const Instructor = require("../../models/Instructor");
 
@@ -73,8 +75,23 @@ router.post(
         );
 
         await newInstructor.save();
-
-        res.status(200).json({ success: "Thanks for registering" });
+        const payload = {
+          instructor: {
+            id: newInstructor.id
+          }
+        };
+        jwt.sign(
+          payload,
+          config.get("jwtSecret"),
+          { expiresIn: 360000 },
+          (error, token) => {
+            if (error) {
+              throw error;
+            } else {
+              res.status(200).json({ token });
+            }
+          }
+        );
       } catch (error) {
         console.log(error.message);
         res.status(500).send("Server Error");

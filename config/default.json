@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://Mike:Emily12345@tennismate-qdtd5.mongodb.net/test?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://Mike:Emily12345@tennismate-qdtd5.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "39423942389472839472934823748237429834723894724893749384892349384"
 }
