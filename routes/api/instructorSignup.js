@@ -53,8 +53,6 @@ router.post(
             .json({ errors: [{ msg: "That email is already being used" }] });
         }
 
-        console.log(req.body);
-
         let newInstructor = new Instructor({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
