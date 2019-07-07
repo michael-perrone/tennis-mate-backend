@@ -24,7 +24,8 @@ const AdminSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  tennisClub: {}
 });
 const Admin = mongoose.model("admin", AdminSchema);
 

@@ -5,7 +5,15 @@ const TennisClubSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  location: {
+  city: {
+    type: String,
+    required: true65
+  },
+  state: {
+    type: String,
+    required: true
+  },
+  zip: {
     type: String,
     required: true
   },
