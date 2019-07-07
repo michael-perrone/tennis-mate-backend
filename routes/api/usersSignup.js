@@ -26,71 +26,66 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    if (
-      req.body.createPassword != req.body.passwordConfirm ||
-      errors.array().length !== 0
-    ) {
-      if (req.body.passwordConfirm != req.body.createPassword) {
-        const passConfirmError = {
-          msg: "Password's do not match",
-          param: "passwordConfirm",
-          location: "body"
-        };
-        const newErrors = [...errors.array(false), passConfirmError];
-        if (newErrors.length !== 0) {
-          return res.status(400).json({ errors: newErrors });
-        }
-      } else {
-        return res.status(400).json({ errors: errors.array() });
-      }
+    if (req.body.passwordConfirm != req.body.createPassword) {
+      const passConfirmError = {
+        msg: "Password's do not match",
+        param: "passwordConfirm",
+        location: "body"
+      };
+      const newErrors = [...errors.array(false), passConfirmError];
+      return res.status(400).json({ errors: newErrors });
     } else {
-      try {
-        let user = await User.findOne({ email: req.body.email });
-        if (user) {
-          return res
-            .status(400)
-            .json({ errors: [{ msg: "That email is already being used" }] });
-        }
-
-        console.log(req.body.gender);
-
-        let newUser = new User({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          phoneNumber: req.body.phoneNumber,
-          password: req.body.createPassword,
-          age: req.body.age,
-          gender: req.body.gender
-        });
-        console.log(newUser);
-
-        const salt = await bcrypt.genSalt(10);
-
-        newUser.password = await bcrypt.hash(req.body.createPassword, salt);
-
-        await newUser.save();
-
-        const payload = {
-          user: {
-            id: newUser.id
+      if (errors.array().length !== 0) {
+        return res.status(400).json({ errors: errors.array() });
+      } else {
+        try {
+          let user = await User.findOne({ email: req.body.email });
+          if (user) {
+            return res
+              .status(400)
+              .json({ errors: [{ msg: "That email is already being used" }] });
           }
-        };
-        jwt.sign(
-          payload,
-          config.get("userSecret"),
-          { expiresIn: 360000 },
-          (error, token) => {
-            if (error) {
-              throw error;
-            } else {
-              res.status(200).json({ token });
+
+          console.log(req.body.gender);
+
+          let newUser = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            phoneNumber: req.body.phoneNumber,
+            password: req.body.createPassword,
+            age: req.body.age,
+            gender: req.body.gender
+          });
+          console.log(newUser);
+
+          const salt = await bcrypt.genSalt(10);
+
+          newUser.password = await bcrypt.hash(req.body.createPassword, salt);
+
+          await newUser.save();
+
+          const payload = {
+            user: {
+              id: newUser.id
             }
-          }
-        );
-      } catch (error) {
-        console.log(error.message);
-        res.status(500).send("Server Error");
+          };
+          jwt.sign(
+            payload,
+            config.get("userSecret"),
+            { expiresIn: 360000 },
+            (error, token) => {
+              if (error) {
+                throw error;
+              } else {
+                res.status(200).json({ token });
+              }
+            }
+          );
+        } catch (error) {
+          console.log(error.message);
+          res.status(500).send("Server Error");
+        }
       }
     }
   }
