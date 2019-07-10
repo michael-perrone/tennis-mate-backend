@@ -71,6 +71,7 @@ router.post(
             req.body.admin.createPassword,
             salt
           );
+
           await newAdmin.save();
           await newTennisClub.save();
           return res.status(200).json({ success: "good shit bro" });
