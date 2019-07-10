@@ -25,9 +25,13 @@ const AdminSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  tennisClub: {
+  tennisClubName: {
     type: String,
     required: true
+  },
+  tennisClub: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "tennisClub"
   }
 });
 const Admin = mongoose.model("admin", AdminSchema);

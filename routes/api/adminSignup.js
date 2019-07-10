@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const TennisClub = require("../../models/TennisClub");
 const Admin = require("../../models/Admin");
 const { check, validationResult } = require("express-validator");
 
@@ -23,8 +24,8 @@ router.post(
     check("phoneNumber", "Please enter a valid phone number").isMobilePhone()
   ],
   async (req, res) => {
-    const errors = validationResult(req);
-    if (req.body.createPassword != req.body.passwordConfirm) {
+    const errors = validationResult(req.body.admin);
+    if (req.body.admin.createPassword != req.body.admin.passwordConfirm) {
       const passConfirmError = {
         msg: "Password's do not match",
         param: "passwordConfirm",
@@ -37,24 +38,41 @@ router.post(
         return res.status(400).json({ errors: errors.array(false) });
       } else {
         try {
-          let admin = await Admin.findOne({ email: req.body.email });
+          let admin = await Admin.findOne({ email: req.body.admin.email });
           if (admin) {
             return res
               .status(400)
               .json({ errors: [{ msg: "That email is being used" }] });
           }
+
+          let newTennisClub = new TennisClub({
+            address: req.body.tennisClub.clubAddress,
+            city: req.body.tennisClub.clubCity,
+            zip: req.body.tennisClub.clubZip,
+            state: req.body.tennisClub.clubState,
+            numberCourts: req.body.tennisClub.numberCourts,
+            timeClubOpens: req.body.tennisClub.clubOpenTime,
+            timeClubCloses: req.body.tennisClub.clubCloseTime,
+            clubWebsite: req.body.tennisClub.clubWebsite,
+            phoneNumber: req.body.tennisClub.phoneNumber
+          });
+
           let newAdmin = new Admin({
-            tennisClub: req.body.tennisClub,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: req.body.createPassword,
-            tennisClub: req.body.tennisClub,
-            phoneNumber: req.body.phoneNumber
+            tennisClubName: req.body.admin.tennisClub,
+            firstName: req.body.admin.firstName,
+            lastName: req.body.admin.lastName,
+            email: req.body.admin.email,
+            password: req.body.admin.createPassword,
+            tennisClub: newTennisClub,
+            phoneNumber: req.body.admin.phoneNumber
           });
           const salt = await bcrypt.genSalt(10);
-          newAdmin.password = await bcrypt.hash(req.body.createPassword, salt);
+          newAdmin.password = await bcrypt.hash(
+            req.body.admin.createPassword,
+            salt
+          );
           await newAdmin.save();
+          await newTennisClub.save();
           return res.status(200).json({ success: "good shit bro" });
         } catch (error) {
           console.log(error);

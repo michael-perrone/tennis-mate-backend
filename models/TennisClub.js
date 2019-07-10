@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
 const TennisClubSchema = new mongoose.Schema({
-  clubName: {
+  address: {
     type: String,
     required: true
   },
   city: {
     type: String,
-    required: true65
+    required: true
   },
   state: {
     type: String,
@@ -21,8 +21,8 @@ const TennisClubSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "instructor"
   },
-  tennisCourts: {
-    type: Number,
+  numberCourts: {
+    type: String,
     required: true
   },
   timeClubOpens: {
@@ -33,6 +33,15 @@ const TennisClubSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  phoneNumber: {
+    type: String,
+    required: true
+  },
+  clubWebsite: {
+    type: String,
+    required: true
+  },
+
   events: {
     type: String
   },
