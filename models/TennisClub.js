@@ -38,8 +38,7 @@ const TennisClubSchema = new mongoose.Schema({
     required: true
   },
   clubWebsite: {
-    type: String,
-    required: true
+    type: String
   },
 
   events: {
