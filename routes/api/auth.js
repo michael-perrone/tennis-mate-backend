@@ -27,17 +27,42 @@ router.get("/instructor", authInstructor, (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  let adminLoggingIn = await Admin.findOne({ email: req.body.email });
+
   let userLoggingIn = await User.findOne({ email: req.body.email });
+  console.log(adminLoggingIn);
+  console.log(userLoggingIn);
+
+  if (adminLoggingIn) {
+    const passwordsMatching = await bcrypt.compare(
+      req.body.password,
+      adminLoggingIn.password
+    );
+    if (passwordsMatching) {
+      const payload = {
+        admin: {
+          id: adminLoggingIn.id
+        }
+      };
+      jwt.sign(
+        payload,
+        config.get("adminSecret"),
+        { expiresIn: 366000 },
+        (error, token) => {
+          res.status(200).json({ token: token });
+        }
+      );
+    }
+  }
   if (userLoggingIn) {
     const passwordsMatching = await bcrypt.compare(
       req.body.password,
       userLoggingIn.password
     );
-
     if (!passwordsMatching) {
       return res
         .status(400)
-        .json({ errors: [{ msg: "Credentials not matching records" }] });
+        .json({ errors: [{ msg: "Caught at passwords not matching user" }] });
     } else {
       const payload = {
         user: {
@@ -59,14 +84,14 @@ router.post("/login", async (req, res) => {
       );
     }
   }
-  if (!userLoggingIn) {
+  if (!userLoggingIn && !adminLoggingIn) {
     let instructorLoggingIn = await Instructor.findOne({
       email: req.body.email
     });
     if (!instructorLoggingIn) {
       res
         .status(400)
-        .json({ errors: [{ msg: "Credentials not matching records" }] });
+        .json({ errors: [{ msg: "stuck at instructor username" }] });
     } else {
       const isPasswordMatching = await bcrypt.compare(
         req.body.password,
@@ -76,7 +101,7 @@ router.post("/login", async (req, res) => {
       if (!isPasswordMatching) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "Credentials not matching records" }] });
+          .json({ errors: [{ msg: "stuck at instructor password" }] });
       }
       const payload = {
         instructor: {
@@ -95,45 +120,6 @@ router.post("/login", async (req, res) => {
           }
         }
       );
-    }
-    if (!instructorLoggingIn && !userLoggingIn) {
-      let adminLoggingIn = await Admin.findOne({
-        email: req.body.email
-      });
-      if (!adminLoggingIn) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "Credentials not matching records" }] });
-      } else {
-        const isPasswordMatching = await bcrypt.compare(
-          req.body.password,
-          adminLoggingIn.password
-        );
-
-        if (!isPasswordMatching) {
-          return res
-            .status(400)
-            .json({ errors: [{ msg: "Credentials not matching records" }] });
-        } else {
-          const payload = {
-            admin: {
-              id: adminLoggingIn.id
-            }
-          };
-          jwt.sign(
-            payload,
-            config.get("adminSecret"),
-            { expiresIn: 360000 },
-            (error, token) => {
-              if (error) {
-                throw error;
-              } else {
-                return res.status(200).json({ token: token });
-              }
-            }
-          );
-        }
-      }
     }
   }
 });
