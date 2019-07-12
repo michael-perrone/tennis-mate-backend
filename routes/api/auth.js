@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs");
 const Instructor = require("../../models/Instructor");
 const { check, validationResult } = require("express-validator");
 const config = require("config");
+const Admin = require("../../models/Admin");
 
 //@route GET api/auth
 // desc test route
@@ -34,35 +35,36 @@ router.post("/login", async (req, res) => {
     );
 
     if (!passwordsMatching) {
-      res
+      return res
         .status(400)
         .json({ errors: [{ msg: "Credentials not matching records" }] });
-    }
-    const payload = {
-      user: {
-        id: userLoggingIn.id
-      }
-    };
-
-    jwt.sign(
-      payload,
-      config.get("userSecret"),
-      { expiresIn: 360000 },
-      (error, token) => {
-        if (error) {
-          throw error;
-        } else {
-          res.status(200).json({ token });
+    } else {
+      const payload = {
+        user: {
+          id: userLoggingIn.id
         }
-      }
-    );
+      };
+
+      jwt.sign(
+        payload,
+        config.get("userSecret"),
+        { expiresIn: 360000 },
+        (error, token) => {
+          if (error) {
+            throw error;
+          } else {
+            res.status(200).json({ token });
+          }
+        }
+      );
+    }
   }
   if (!userLoggingIn) {
     let instructorLoggingIn = await Instructor.findOne({
       email: req.body.email
     });
     if (!instructorLoggingIn) {
-      return res
+      res
         .status(400)
         .json({ errors: [{ msg: "Credentials not matching records" }] });
     } else {
@@ -93,6 +95,45 @@ router.post("/login", async (req, res) => {
           }
         }
       );
+    }
+    if (!instructorLoggingIn && !userLoggingIn) {
+      let adminLoggingIn = await Admin.findOne({
+        email: req.body.email
+      });
+      if (!adminLoggingIn) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "Credentials not matching records" }] });
+      } else {
+        const isPasswordMatching = await bcrypt.compare(
+          req.body.password,
+          adminLoggingIn.password
+        );
+
+        if (!isPasswordMatching) {
+          return res
+            .status(400)
+            .json({ errors: [{ msg: "Credentials not matching records" }] });
+        } else {
+          const payload = {
+            admin: {
+              id: adminLoggingIn.id
+            }
+          };
+          jwt.sign(
+            payload,
+            config.get("adminSecret"),
+            { expiresIn: 360000 },
+            (error, token) => {
+              if (error) {
+                throw error;
+              } else {
+                return res.status(200).json({ token: token });
+              }
+            }
+          );
+        }
+      }
     }
   }
 });
