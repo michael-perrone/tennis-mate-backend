@@ -1,6 +1,13 @@
 const mongoose = require("mongoose");
 
 const TennisClubSchema = new mongoose.Schema({
+  clubNameAllLower: {
+    type: String
+  },
+  clubName: {
+    type: String,
+    required: true
+  },
   address: {
     type: String,
     required: true

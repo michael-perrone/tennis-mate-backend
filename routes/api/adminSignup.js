@@ -46,6 +46,12 @@ router.post(
           }
 
           let newTennisClub = new TennisClub({
+            clubNameAllLower: req.body.admin.tennisClub
+              .split(" ")
+              .reduce((accum, element) => {
+                return (accum += element);
+              }),
+            clubName: req.body.admin.tennisClub,
             address: req.body.tennisClub.clubAddress,
             city: req.body.tennisClub.clubCity,
             zip: req.body.tennisClub.clubZip,
