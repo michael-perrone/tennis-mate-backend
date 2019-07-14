@@ -1,9 +1,11 @@
-const mongoose = require("mongoose");
-const express = "express";
+const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const TennisClub = require("../../models/TennisClub");
 
 router.get("/", async (req, res) => {
-  let clubs = TennisClub.find({});
+  let clubs = await TennisClub.find({});
   res.status(200).json({ clubs });
 });
+
+module.exports = router;
