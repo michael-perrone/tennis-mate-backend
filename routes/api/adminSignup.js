@@ -57,8 +57,10 @@ router.post(
             zip: req.body.tennisClub.clubZip,
             state: req.body.tennisClub.clubState,
             numberCourts: req.body.tennisClub.numberCourts,
-            timeClubOpens: req.body.tennisClub.clubOpenTime,
-            timeClubCloses: req.body.tennisClub.clubCloseTime,
+            clubOpenTimeNumber: req.body.tennisClub.clubOpenTimeNumber,
+            clubOpenTimeAMPM: req.body.tennisClub.clubOpenTimeAMPM,
+            clubCloseTimeNumber: req.body.tennisClub.clubCloseTimeNumber,
+            clubCloseTimeAMPM: req.body.tennisClub.clubCloseTimeAMPM,
             clubWebsite: req.body.tennisClub.clubWebsite,
             phoneNumber: req.body.tennisClub.phoneNumber
           });
