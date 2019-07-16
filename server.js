@@ -12,6 +12,7 @@ app.get("/", (req, res) => {
   res.send("hi");
 });
 
+app.use("/api/timeSlotBooked", require("./routes/api/timeSlotBooked"));
 app.use("/api/club", require("./routes/api/club"));
 app.use("/api/usersSignup", require("./routes/api/usersSignup"));
 app.use("/api/auth", require("./routes/api/auth"));

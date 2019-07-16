@@ -1,12 +1,9 @@
 const mongoose = require("mongoose");
 
 const TimeSlotbookedSchema = new mongoose.Schema({
-  timeStart: String,
-  timeEnd: String,
-  courtNumber: String,
-  courtId: Number
+  courtId: String
 });
 
-const TimeSlotBooked = mongoose.model("timeSlotBooked", TimeSlotbookedSchema);
+const TimeSlotBooked = mongoose.model("timeSlotsBooked", TimeSlotbookedSchema);
 
-export default TimeSlotBooked;
+module.exports = TimeSlotBooked;
