@@ -3,7 +3,9 @@ const router = express.Router();
 const TimeSlotBooked = require("../../models/TimeSlotBooked");
 
 router.post("/", async (req, res) => {
+  console.log(req.body);
   let newTimeSlotBooked = new TimeSlotBooked({
+    clubName: req.body.clubName,
     courtId: req.body.courtId
   });
 
