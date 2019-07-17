@@ -8,3 +8,7 @@ const CourtBookedSchema = new mongoose.Schema({
   minutes: String,
   clubName: String
 });
+
+const CourtBooked = mongoose.model("courtBooked", CourtBookedSchema);
+
+module.exports = CourtBooked;
