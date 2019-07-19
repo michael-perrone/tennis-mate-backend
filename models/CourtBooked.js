@@ -6,7 +6,8 @@ const CourtBookedSchema = new mongoose.Schema({
   bookedBy: String,
   courtIds: [String],
   minutes: String,
-  clubName: String
+  clubName: String,
+  date: String
 });
 
 const CourtBooked = mongoose.model("courtBooked", CourtBookedSchema);

@@ -9,7 +9,8 @@ router.post("/", async (req, res) => {
     courtIds: req.body.courtIds,
     timeStart: req.body.timeStart,
     timeEnd: req.body.timeEnd,
-    minutes: req.body.minutes
+    minutes: req.body.minutes,
+    date: req.body.date
   });
 
   if (newCourtBooked) {
