@@ -4,7 +4,11 @@ const db = config.get("mongoURI");
 
 const connectDatabase = async () => {
   try {
-    await mongoose.connect(db, { useNewUrlParser: true, useCreateIndex: true });
+    await mongoose.connect("mongodb://127.0.0.1/myapp", {
+      useNewUrlParser: true,
+      useCreateIndex: true
+    });
+    // mongod.exe --dbpath "\Users\Bob\Desktop\mongodb-data"
 
     console.log("mongodb connected");
   } catch (err) {
