@@ -3,7 +3,7 @@ const router = express.Router();
 const instructorAuth = require("../../middleware/authInstructor");
 const InstructorProfile = require("../../models/InstructorProfile");
 
-router.get("/myprofile", [instructorAuth, [check()]], async (req, res) => {
+router.get("/myprofile", [instructorAuth, async (req, res) => {
   let profile = InstructorProfile.findOne({ id: req.instructor.id }).populate(
     "instructor",
     ["firstName", "lastName", "tennisClub"]
