@@ -29,28 +29,7 @@ const InstructorSignUpSchema = new mongoose.Schema({
   },
   gender: {
     type: String
-  },
-  yearsTeaching: {},
-
-  experience: [
-    {
-      jobTitle: {
-        type: String
-      },
-      clubName: {
-        type: String
-      },
-      from: {
-        type: Date
-      },
-      to: {
-        type: Date
-      },
-      description: {
-        type: String
-      }
-    }
-  ]
+  }
 });
 
 const Instructor = mongoose.model("instructor", InstructorSignUpSchema);
