@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
+const instructorAuth = require("../../middleware/authInstructor");
 const InstructorProfile = require("../../models/InstructorProfile");
 
-router.get("/myprofile", async (req, res) => {
+router.get("/myprofile", [instructorAuth, [check()]], async (req, res) => {
   let profile = InstructorProfile.findOne({ id: req.instructor.id }).populate(
     "instructor",
     ["firstName", "lastName", "tennisClub"]
@@ -22,6 +22,9 @@ router.get("/myprofile", async (req, res) => {
   }
 });
 
-router.post("/");
+router.post("/", async (req, res) => {
+  if (req.body) {
+  }
+});
 
 module.exports = router;
