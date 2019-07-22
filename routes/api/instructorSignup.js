@@ -66,7 +66,8 @@ router.post(
           await newInstructor.save();
           const payload = {
             instructor: {
-              id: newInstructor.id
+              id: newInstructor.id,
+              instructor: true
             }
           };
           jwt.sign(
@@ -81,6 +82,7 @@ router.post(
               }
             }
           );
+          console.log(payload);
         } catch (error) {
           console.log(error.message);
           res.status(500).send("Server Error");

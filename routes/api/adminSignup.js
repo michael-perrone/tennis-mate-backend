@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const TennisClub = require("../../models/TennisClub");
 const Admin = require("../../models/Admin");
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
 router.post(
   "/",
@@ -80,6 +82,27 @@ router.post(
             salt
           );
 
+          const payload = {
+            admin: {
+              isAdmin: true,
+              adminId: newAdmin.id,
+              clubId: newTennisClub.id
+            }
+          };
+
+          jwt.sign(
+            payload,
+            config.get("adminSecret"),
+            { expiresIn: 3600000 },
+            (error, token) => {
+              if (error) {
+                console.log(error);
+              } else {
+                res.status(200).json({ token });
+              }
+            }
+          );
+          console.log(payload);
           await newAdmin.save();
           await newTennisClub.save();
           return res.status(200).json({ success: "good shit bro" });

@@ -30,8 +30,8 @@ router.post("/login", async (req, res) => {
   let adminLoggingIn = await Admin.findOne({ email: req.body.email });
 
   let userLoggingIn = await User.findOne({ email: req.body.email });
-  console.log(adminLoggingIn);
-  console.log(userLoggingIn);
+  console.log(adminLoggingIn, "am i null");
+  console.log(userLoggingIn, "am i null");
 
   if (adminLoggingIn) {
     const passwordsMatching = await bcrypt.compare(
@@ -41,6 +41,7 @@ router.post("/login", async (req, res) => {
     if (passwordsMatching) {
       const payload = {
         admin: {
+          isAdmin: true,
           id: adminLoggingIn.id
         }
       };
@@ -66,6 +67,7 @@ router.post("/login", async (req, res) => {
     } else {
       const payload = {
         user: {
+          isUser: true,
           id: userLoggingIn.id
         }
       };
@@ -105,6 +107,7 @@ router.post("/login", async (req, res) => {
       }
       const payload = {
         instructor: {
+          isInstructor: true,
           id: instructorLoggingIn.id
         }
       };
