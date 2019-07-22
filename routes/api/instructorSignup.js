@@ -67,7 +67,8 @@ router.post(
           const payload = {
             instructor: {
               id: newInstructor.id,
-              instructor: true
+              instructor: true,
+              clubName: newInstructor.clubName
             }
           };
           jwt.sign(

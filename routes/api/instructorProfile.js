@@ -24,6 +24,9 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
 
 router.post("/", async (req, res) => {
   if (req.body) {
+    const profileFields = {};
+    if (req.body.jobTitle) profileFields.jobTite === req.body.jobTitle;
+    profileFields.clubName = req.instructor.clubName;
   }
 });
 

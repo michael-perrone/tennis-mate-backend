@@ -12,6 +12,7 @@ module.exports = function(req, res, next) {
     const decodedToken = jwt.verify(token, config.get("instructorSecret"));
     console.log(decodedToken, "am i null");
     req.instructor = decodedToken.instructor;
+    req.clubName = decodedToken.clubName;
     next();
   } catch (error) {
     res.status(401).json({ msg: "Also not authorized" });

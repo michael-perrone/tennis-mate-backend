@@ -45,6 +45,7 @@ router.post("/login", async (req, res) => {
           id: adminLoggingIn.id
         }
       };
+      console.log(payload);
       jwt.sign(
         payload,
         config.get("adminSecret"),
@@ -71,6 +72,7 @@ router.post("/login", async (req, res) => {
           id: userLoggingIn.id
         }
       };
+      console.log(payload);
 
       jwt.sign(
         payload,
@@ -108,9 +110,11 @@ router.post("/login", async (req, res) => {
       const payload = {
         instructor: {
           isInstructor: true,
-          id: instructorLoggingIn.id
+          id: instructorLoggingIn.id,
+          clubName: instructorLoggingIn.tennisClub
         }
       };
+      console.log(payload);
       jwt.sign(
         payload,
         config.get("instructorSecret"),
