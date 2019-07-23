@@ -7,7 +7,7 @@ const User = require("../../models/User");
 
 router.get("/myprofile", authUser, async (req, res) => {
   try {
-    const profile = await Profile.findOne({ user: req.user.id }).populate(
+    const profile = await UserProfile.findOne({ user: req.user.id }).populate(
       "user",
       ["firstName", "lastName"]
     );
@@ -104,7 +104,5 @@ router.delete("/", authUser, async (req, res) => {
     res.send(error.msg);
   }
 });
-
-router.put("/experience", authUser, async (req, res) => {});
 
 module.exports = router;
