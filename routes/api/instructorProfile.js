@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Instructor = require("../../models/Instructor");
 const instructorAuth = require("../../middleware/authInstructor");
 const InstructorProfile = require("../../models/InstructorProfile");
 
@@ -64,11 +65,11 @@ router.post("/", instructorAuth, async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const profiles = await InstructorProfile.find().populate("user", [
-      "firstName",
-      "lastName"
-    ]);
-    res.json(profiles);
+    const instructorProfiles = await InstructorProfile.find().populate(
+      "instructor",
+      ["firstName", "lastName"]
+    );
+    res.json(instructorProfiles);
   } catch (error) {
     console.log(error.message);
     res.status(500).send("server error");
@@ -94,11 +95,13 @@ router.get("/user/:user_id", async (req, res) => {
 
 router.delete("/", instructorAuth, async (req, res) => {
   try {
-    await Profile.findOneAndRemove({ user: req.user.id });
-    await User.findOneAndRemove({ _id: req.user.id });
-    res.json({ msg: "User Removed" });
+    await InstructorProfile.findOneAndRemove({ instructor: req.instructor.id });
+    await Instructor.findOneAndRemove({ _id: req.instructor.id });
+    res.json({ msg: "Instructor Removed" });
   } catch (error) {
-    res.send(error.msg);
+    console.log(error);
+    res.json({ msg: error });
+    res.send("not good");
   }
 });
 
@@ -134,6 +137,18 @@ router.put("/experience", instructorAuth, async (req, res) => {
       console.log(error.message);
       res.status(500).send("server error");
     }
+  }
+});
+
+router.delete("/", instructorAuth, async (req, res) => {
+  try {
+    await InstructorProfile.findOneAndDelete({ instructor: req.instructor.id });
+    await Instructor.findOneAndRemove({ _id: req.instructor.id });
+
+    res.json({ msg: "User Removed" });
+  } catch (error) {
+    console.log(error);
+    res.send(error.msg);
   }
 });
 

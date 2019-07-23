@@ -9,7 +9,6 @@ const connectDatabase = async () => {
       useCreateIndex: true
     });
     // mongod.exe --dbpath "\Users\Bob\Desktop\mongodb-data"
-
     console.log("mongodb connected");
   } catch (err) {
     console.log(err.message);
