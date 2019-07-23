@@ -5,7 +5,7 @@ const InstructorProfile = require("../../models/InstructorProfile");
 
 router.get("/myprofile", instructorAuth, async (req, res) => {
   try {
-    let profile = await InstructorProfile.findOne({
+    let instructorProfile = await InstructorProfile.findOne({
       instructor: req.instructor.id
     }).populate("instructor", ["firstName", "lastName", "tennisClub"]);
     if (!profile) {
@@ -14,7 +14,7 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
         .json({ msg: "There is no profile for this instructor" });
     }
 
-    if (profile) {
+    if (instructorProfile) {
       return res.status(200).json({ profile });
     }
   } catch (error) {
@@ -26,6 +26,7 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
 router.post("/", instructorAuth, async (req, res) => {
   try {
     let profileFields = {};
+    profileFields.instructor = req.instructor.id;
     if (req.body.jobTitle) profileFields.jobTitle = req.body.jobTitle;
     if (req.body.yearsTeaching) {
       profileFields.yearsTeaching = req.body.yearsTeaching;
@@ -44,17 +45,14 @@ router.post("/", instructorAuth, async (req, res) => {
       instructor: req.instructor.id
     });
 
-    console.log(profileFields, "im here");
     if (instructorProfile) {
-      console.log("yall got it");
-      instructorProfile = await InstructorProfile.findByIdAndUpdate(
-        { instructorProfile: req.instructor.id },
+      instructorProfile = await InstructorProfile.findOneAndUpdate(
+        { instructor: req.instructor.id },
         { $set: profileFields },
         { new: true }
       );
       return res.json(instructorProfile);
     } else {
-      console.log("nope");
       instructorProfile = new InstructorProfile(profileFields);
       await instructorProfile.save();
       res.json(instructorProfile);

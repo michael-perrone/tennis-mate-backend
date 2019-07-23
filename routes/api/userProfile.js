@@ -28,7 +28,6 @@ router.post("/", authUser, async (req, res) => {
   try {
     const profileFields = {};
     profileFields.user = req.user.id;
-    console.log(profileFields.user);
     if (req.body.yearsOfPlaying) {
       profileFields.yearsOfPlaying = req.body.yearsOfPlaying;
     }
@@ -43,10 +42,10 @@ router.post("/", authUser, async (req, res) => {
     }
 
     let userProfile = await UserProfile.findOne({ user: req.user.id });
+    console.log(userProfile, "me");
     if (userProfile) {
-      console.log("fuck");
-      userProfile = await UserProfile.findByIdAndUpdate(
-        { userProfile: req.user.id },
+      userProfile = await UserProfile.findOneAndUpdate(
+        { user: req.user.id },
         { $set: profileFields },
         { new: true }
       );
@@ -54,7 +53,7 @@ router.post("/", authUser, async (req, res) => {
     } else {
       userProfile = new UserProfile(profileFields);
       await userProfile.save();
-      res.json(userProfile);
+      res.json({ profileFields });
     }
   } catch (error) {
     console.log(error);
