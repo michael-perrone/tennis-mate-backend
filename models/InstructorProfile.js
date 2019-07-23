@@ -6,7 +6,8 @@ const instructorProfileSchema = new mongoose.Schema({
     ref: "instructor"
   },
   yearsTeaching: String,
-
+  previousCurrentRanking: String,
+  location: String,
   experience: [
     {
       jobTitle: {

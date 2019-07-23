@@ -25,22 +25,39 @@ router.get("/myprofile", authUser, async (req, res) => {
 });
 
 router.post("/", authUser, async (req, res) => {
-  if (req.body) {
-    const profileFields = {};
-    profileFields.user = req.user.id;
-    console.log(profileFields.user);
-    if (req.body.yearsOfPlaying) {
-      profileFields.yearsOfPlaying = req.body.yearsOfPlaying;
+  try {
+    if (req.body) {
+      const profileFields = {};
+      profileFields.user = req.user.id;
+      console.log(profileFields.user);
+      if (req.body.yearsOfPlaying) {
+        profileFields.yearsOfPlaying = req.body.yearsOfPlaying;
+      }
+      if (req.body.experience) {
+        profileFields.experience = req.body.experience;
+      }
+      if (req.body.lookingFor) {
+        profileFields.lookingFor = req.body.lookingFor;
+      }
+      if (req.body.bio) {
+        profileFields.bio = req.body.bio;
+      }
     }
-    if (req.body.experience) {
-      profileFields.experience = req.body.experience;
+    let userProfile = await UserProfile.findOne({ user: req.user.id });
+    if (userProfile) {
+      userProfile = await UserProfile.findByIdAndUpdate(
+        { instructorProfile: req.instructor.id },
+        { $set: profileFields },
+        { new: true }
+      );
+      return res.json(userProfile);
+    } else {
+      userProfile = new UserProfile(profileFields);
+      await userProfile.save();
+      res.json(userProfile);
     }
-    if (req.body.lookingFor) {
-      profileFields.lookingFor = req.body.lookingFor;
-    }
-    if (req.body.bio) {
-      profileFields.bio = req.body.bio;
-    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

@@ -23,11 +23,43 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (req.body) {
-    const profileFields = {};
-    if (req.body.jobTitle) profileFields.jobTite === req.body.jobTitle;
-    profileFields.clubName = req.instructor.clubName;
-  }
+  try {
+    if (req.body) {
+      const profileFields = {};
+      if (req.body.jobTitle) profileFields.jobTite === req.body.jobTitle;
+      if (req.body.yearsTeaching) {
+        profileFields.yearsTeaching === req.body.yearsTeaching;
+      }
+      if (req.body.bio) profileFields.bio === req.body.bio;
+      if (req.body.previousCurrentRanking) {
+        profileFields.previousCurrentRanking ===
+          req.body.previousCurrentRanking;
+      }
+      if (req.body.location) {
+        profileFields.location = req.body.location;
+      }
+
+      profileFields.clubName = req.instructor.clubName;
+
+      let instructorProfile = await InstructorProfile.findOne({
+        instructor: req.instructor.id
+      });
+
+      if (instructorProfile) {
+        instructorProfile = await InstructorProfile.findOneAndUpdate(
+          { instructor: req.instructor.id },
+          { $set: profileFields },
+          { new: true }
+        );
+
+        return res.json(instructorProfile);
+      } else {
+        instructorProfile = new InstructorProfile(profileFields);
+        await instructorProfile.save();
+        res.json(instructorProfile);
+      }
+    }
+  } catch (error) {}
 });
 
 module.exports = router;
