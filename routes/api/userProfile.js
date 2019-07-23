@@ -61,4 +61,50 @@ router.post("/", authUser, async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const profiles = await UserProfile.find().populate("user", [
+      "firstName",
+      "lastName"
+    ]);
+    res.json(profiles);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("server error");
+  }
+});
+router.get("/user/:user_id", async (req, res) => {
+  try {
+    const profile = await UserProfile.findOne({
+      user: req.params.user_id
+    }).populate("user", ["firstName", "lastName"]);
+    if (!profile) {
+      return res.status(400).json({ msg: "There is no profile" });
+    } else {
+      res.send(profile);
+    }
+  } catch (error) {
+    console.log(error.message);
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({ msg: "There is no user" });
+    }
+    res.status(500).send("server error");
+  }
+});
+
+router.delete("/", authUser, async (req, res) => {
+  try {
+    await Profile.findOneAndRemove({ user: req.user.id });
+
+    await User.findOneAndRemove({ _id: req.user.id });
+
+    res.json({ msg: "User Removed" });
+  } catch (error) {
+    console.log(error);
+    res.send(error.msg);
+  }
+});
+
+router.put("/experience", authUser, async (req, res) => {});
+
 module.exports = router;
