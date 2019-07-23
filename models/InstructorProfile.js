@@ -10,9 +10,7 @@ const instructorProfileSchema = new mongoose.Schema({
   location: String,
   experience: [
     {
-      jobTitle: {
-        type: String
-      },
+      jobTitle: String,
       clubName: {
         type: String
       },

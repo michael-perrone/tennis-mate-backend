@@ -46,15 +46,15 @@ router.post("/", instructorAuth, async (req, res) => {
 
     console.log(profileFields, "im here");
     if (instructorProfile) {
-      console.log("i exist");
-      instructorProfile = await InstructorProfile.findOneAndUpdate(
-        { instructor: req.instructor.id },
+      console.log("yall got it");
+      instructorProfile = await InstructorProfile.findByIdAndUpdate(
+        { instructorProfile: req.instructor.id },
         { $set: profileFields },
         { new: true }
       );
       return res.json(instructorProfile);
     } else {
-      console.log("im hereeeeee");
+      console.log("nope");
       instructorProfile = new InstructorProfile(profileFields);
       await instructorProfile.save();
       res.json(instructorProfile);
