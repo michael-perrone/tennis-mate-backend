@@ -42,7 +42,6 @@ router.post("/", authUser, async (req, res) => {
     }
 
     let userProfile = await UserProfile.findOne({ user: req.user.id });
-    console.log(userProfile, "me");
     if (userProfile) {
       userProfile = await UserProfile.findOneAndUpdate(
         { user: req.user.id },
@@ -93,7 +92,7 @@ router.get("/user/:user_id", async (req, res) => {
 
 router.delete("/", authUser, async (req, res) => {
   try {
-    await Profile.findOneAndRemove({ user: req.user.id });
+    await UserProfile.findOneAndRemove({ user: req.user.id });
 
     await User.findOneAndRemove({ _id: req.user.id });
 

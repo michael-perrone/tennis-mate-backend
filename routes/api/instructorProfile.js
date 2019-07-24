@@ -75,7 +75,7 @@ router.get("/", async (req, res) => {
     res.status(500).send("server error");
   }
 });
-router.get("/user/:user_id", async (req, res) => {
+router.get("/instructor/:instructor_id", async (req, res) => {
   try {
     const profile = await InstructorProfile.findOne({
       instructor: req.params.instructor_id
