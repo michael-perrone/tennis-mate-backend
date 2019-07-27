@@ -11,85 +11,58 @@ const config = require("config");
 // access public
 router.post(
   "/",
-  [
-    check("firstName", "Please enter your first name")
-      .not()
-      .isEmpty(),
-    check("lastName", "Please enter your last name")
-      .not()
-      .isEmpty(),
-    check("email", "Enter a Valid Email").isEmail(),
-    check("createPassword", "Password must be 6 characters long").isLength({
-      min: 6
-    }),
-    check("phoneNumber", "Please enter a valid Phone Number").isMobilePhone()
-  ],
+
   async (req, res) => {
-    const errors = validationResult(req);
-    if (req.body.passwordConfirm != req.body.createPassword) {
-      const passConfirmError = {
-        msg: "Password's do not match",
-        param: "passwordConfirm",
-        location: "body"
-      };
-      const newErrors = [...errors.array(false), passConfirmError];
-      return res.status(400).json({ errors: newErrors });
-    } else {
-      if (errors.array().length !== 0) {
-        return res.status(400).json({ errors: errors.array() });
-      } else {
-        try {
-          let user = await User.findOne({ email: req.body.email });
-          if (user) {
-            return res
-              .status(400)
-              .json({ errors: [{ msg: "That email is already being used" }] });
-          }
-
-          console.log(req.body.gender);
-
-          let newUser = new User({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            phoneNumber: req.body.phoneNumber,
-            password: req.body.createPassword,
-            age: req.body.age,
-            gender: req.body.gender
-          });
-          console.log(newUser);
-
-          const salt = await bcrypt.genSalt(10);
-
-          newUser.password = await bcrypt.hash(req.body.createPassword, salt);
-
-          await newUser.save();
-
-          const payload = {
-            user: {
-              user: true,
-              id: newUser.id
-            }
-          };
-          jwt.sign(
-            payload,
-            config.get("userSecret"),
-            { expiresIn: 36000000 },
-            (error, token) => {
-              if (error) {
-                throw error;
-              } else {
-                console.log(config.get("userSecret"));
-                res.status(200).json({ token });
-              }
-            }
-          );
-          console.log(payload);
-        } catch (error) {
-          console.log(error.message);
-          res.status(500).send("Server Error");
-        }
+    try {
+      let user = await User.findOne({ email: req.body.email });
+      if (user) {
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "That email is already being used" }] });
       }
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send("Server Error");
+    }
+
+    if (!user) {
+      let newUser = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        phoneNumber: req.body.phoneNumber,
+        password: req.body.createPassword,
+        age: req.body.age,
+        gender: req.body.gender
+      });
+      console.log(newUser);
+
+      const salt = await bcrypt.genSalt(10);
+
+      newUser.password = await bcrypt.hash(req.body.createPassword, salt);
+
+      await newUser.save();
+
+      const payload = {
+        user: {
+          user: true,
+          id: newUser.id
+        }
+      };
+      jwt.sign(
+        payload,
+        config.get("userSecret"),
+        { expiresIn: 36000000 },
+        (error, token) => {
+          if (error) {
+            throw error;
+          } else {
+            console.log(config.get("userSecret"));
+            res.status(200).json({ token });
+          }
+        }
+      );
+      console.log(payload);
     }
   }
 );
