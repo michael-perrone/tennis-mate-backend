@@ -68,6 +68,7 @@ router.post("/login", async (req, res) => {
     } else {
       const payload = {
         user: {
+          userName: `${userLoggingIn.firstName} ${userLoggingIn.lastName}`,
           isUser: true,
           id: userLoggingIn.id
         }
