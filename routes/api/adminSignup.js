@@ -6,6 +6,8 @@ const Admin = require("../../models/Admin");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const User = require("../../models/User");
+const Instructor = require("../../models/Instructor");
 
 router.post(
   "/",
@@ -40,8 +42,10 @@ router.post(
         return res.status(400).json({ errors: errors.array(false) });
       } else {
         try {
+          let instructor = await Instructor.findOne({ email: req.body.email });
           let admin = await Admin.findOne({ email: req.body.admin.email });
-          if (admin) {
+          let user = await User.findOne({ email: req.body.email });
+          if (admin || user || instructor) {
             return res
               .status(400)
               .json({ errors: [{ msg: "That email is being used" }] });

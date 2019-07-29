@@ -42,7 +42,7 @@ router.post("/login", async (req, res) => {
       const payload = {
         admin: {
           isAdmin: true,
-          id: adminLoggingIn.id
+          userName: `${adminLoggingIn.firstName} ${adminLoggingIn.lastName}`
         }
       };
       console.log(payload);

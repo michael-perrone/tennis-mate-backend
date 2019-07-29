@@ -5,14 +5,18 @@ const { check, validationResult, body } = require("express-validator");
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const Admin = "../../models/Admin.js";
+const Instructor = "../../models/Instructor.js";
 
 //@route POST api/users
 // desc register user
 // access public
 router.post("/", async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
+  let admin = await Admin.findOne({ email: req.body.email });
+  let instructor = await Instructor.findOne({ email: req.body.email });
   try {
-    if (user) {
+    if (user || admin || instructor) {
       return res
         .status(400)
         .json({ errors: [{ msg: "That email is already being used" }] });

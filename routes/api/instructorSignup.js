@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const Admin = require("../../models/Admin");
+const User = require("../../models/User");
 
 const Instructor = require("../../models/Instructor");
 
@@ -40,8 +42,10 @@ router.post(
         return res.status(400).json({ errors: errors.array() });
       } else {
         try {
+          let user = await User.findOne({ email: req.body.email });
+          let admin = await Admin.findOne({ email: req.body.email });
           let instructor = await Instructor.findOne({ email: req.body.email });
-          if (instructor) {
+          if (instructor || admin || user) {
             return res
               .status(400)
               .json({ errors: [{ msg: "That email is already being used" }] });
