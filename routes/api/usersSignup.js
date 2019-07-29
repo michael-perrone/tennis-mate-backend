@@ -44,7 +44,8 @@ router.post("/", async (req, res) => {
       user: {
         user: true,
         id: newUser.id,
-        username: newUser.firstName
+        userNameFirst: newUser.firstName,
+        userNameLast: newUser.lastName
       }
     };
     jwt.sign(

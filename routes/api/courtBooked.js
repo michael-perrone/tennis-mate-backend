@@ -5,6 +5,7 @@ const CourtBooked = require("../../models/CourtBooked");
 router.post("/", async (req, res) => {
   console.log(req.body);
   let newCourtBooked = new CourtBooked({
+    bookedBy: req.body.bookedBy,
     clubName: req.body.clubName,
     courtIds: req.body.courtIds,
     timeStart: req.body.timeStart,
