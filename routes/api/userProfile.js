@@ -1,18 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const authUser = require("../../middleware/authUser");
-
 const UserProfile = require("../../models/UserProfile");
 const User = require("../../models/User");
 
 router.get("/myprofile", authUser, async (req, res) => {
+  console.log(req.body);
   try {
     const profile = await UserProfile.findOne({ user: req.user.id }).populate(
       "user",
       ["firstName", "lastName"]
     );
     if (!profile) {
-      return res.status(400).json({ msg: "There is no profile for this user" });
+      let profileBeingCreatedUser = await User.findOne({ _id: req.user.id });
+      return res
+        .status(200)
+        .json({
+          profileCreated: false,
+          usersName: `${profileBeingCreatedUser.firstName} ${
+            profileBeingCreatedUser.lastName
+          }`
+        });
     }
     if (profile) {
       console.log("im here!");

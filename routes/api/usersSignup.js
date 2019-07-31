@@ -5,8 +5,8 @@ const { check, validationResult, body } = require("express-validator");
 const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const Admin = "../../models/Admin.js";
-const Instructor = "../../models/Instructor.js";
+const Admin = require("../../models/Admin.js");
+const Instructor = require("../../models/Instructor.js");
 
 //@route POST api/users
 // desc register user
