@@ -13,14 +13,10 @@ router.get("/myprofile", authUser, async (req, res) => {
     );
     if (!profile) {
       let profileBeingCreatedUser = await User.findOne({ _id: req.user.id });
-      return res
-        .status(200)
-        .json({
-          profileCreated: false,
-          usersName: `${profileBeingCreatedUser.firstName} ${
-            profileBeingCreatedUser.lastName
-          }`
-        });
+      return res.status(200).json({
+        profileCreated: false,
+        firstName: profileBeingCreatedUser.firstName
+      });
     }
     if (profile) {
       console.log("im here!");
