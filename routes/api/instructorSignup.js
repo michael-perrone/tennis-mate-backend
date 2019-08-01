@@ -72,7 +72,7 @@ router.post(
             instructor: {
               id: newInstructor.id,
               instructor: true,
-              clubName: newInstructor.clubName
+              name: `${newInstructor.firstName}`
             }
           };
           jwt.sign(

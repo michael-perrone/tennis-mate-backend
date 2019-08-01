@@ -9,14 +9,12 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
     let instructorProfile = await InstructorProfile.findOne({
       instructor: req.instructor.id
     }).populate("instructor", ["firstName", "lastName", "tennisClub"]);
-    if (!profile) {
-      return res
-        .status(400)
-        .json({ msg: "There is no profile for this instructor" });
+    if (!instructorProfile) {
+      return res.status(200).json({ profileCreated: false });
     }
 
     if (instructorProfile) {
-      return res.status(200).json({ profile });
+      return res.status(200).json({ instructorProfile, profileCreated: true });
     }
   } catch (error) {
     console.log(error);
