@@ -110,6 +110,9 @@ router.post("/login", async (req, res) => {
       }
       const payload = {
         instructor: {
+          instructorName: `${instructorLoggingIn.firstName} ${
+            instructorLoggingIn.lastName
+          }`,
           isInstructor: true,
           id: instructorLoggingIn.id,
           clubName: instructorLoggingIn.tennisClub
