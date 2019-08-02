@@ -38,6 +38,26 @@ router.post("/", instructorAuth, async (req, res) => {
       profileFields.location = req.body.location;
     }
 
+    if (req.body.certifications) {
+      profileFields.certifications = req.body.certifications;
+    }
+
+    if (req.body.ageRangePreferred) {
+      profileFields.ageRangePreferred = req.body.ageRangePreferred;
+    }
+
+    if (req.body.levelPreffered) {
+      profileFields.levelPreffered = req.body.levelPreffered;
+    }
+
+    if (req.body.photo) {
+      profileFields.photo = req.body.photo;
+    }
+
+    if (req.body.lessonRate) {
+      profileFields.lessonRate = req.body.lessonRate;
+    }
+
     profileFields.clubName = req.instructor.clubName;
 
     let instructorProfile = await InstructorProfile.findOne({

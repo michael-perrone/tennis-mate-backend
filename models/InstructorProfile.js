@@ -8,6 +8,13 @@ const instructorProfileSchema = new mongoose.Schema({
   yearsTeaching: String,
   previousCurrentRanking: String,
   location: String,
+  certifications: [
+    {
+      certificationName: String,
+      certificationDate: String,
+      certificationDescription: String
+    }
+  ],
   experience: [
     {
       jobTitle: String,
@@ -29,7 +36,11 @@ const instructorProfileSchema = new mongoose.Schema({
       }
     }
   ],
-  bio: String
+  bio: String,
+  ageRangePreffered: String,
+  levelPreffered: String,
+  photo: String,
+  lessonRate: String
 });
 
 const InstructorProfile = mongoose.model(
