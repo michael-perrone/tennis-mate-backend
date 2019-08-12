@@ -15,18 +15,20 @@ const instructorProfileSchema = new mongoose.Schema({
       certificationDescription: String
     }
   ],
-  experience: [
+  jobExperience: [
     {
       jobTitle: String,
       clubName: {
         type: String
       },
-      from: {
-        type: Date
+      fromMonth: {
+        type: String
       },
-      to: {
-        type: Date
+      fromYear: String,
+      toMonth: {
+        type: String
       },
+      toYear: String,
       description: {
         type: String
       },
@@ -37,8 +39,6 @@ const instructorProfileSchema = new mongoose.Schema({
     }
   ],
   bio: String,
-  ageRangePreffered: String,
-  levelPreffered: String,
   photo: String,
   lessonRate: String
 });
