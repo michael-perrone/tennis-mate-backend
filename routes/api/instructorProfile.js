@@ -24,7 +24,24 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
 
 router.post("/", instructorAuth, async (req, res) => {
   try {
+    console.log(req.body.jobExperience["0"]);
     let profileFields = {};
+    let jobExpArray = [];
+    let certificationsArray = [];
+    for (let i = 0; i < req.body.jobExpLength; i++) {
+      jobExpArray.push(req.body.jobExperience[i.toString()]);
+    }
+    console.log(jobExpArray);
+    if (jobExpArray.length > 0) {
+      profileFields.jobExperience = jobExpArray;
+    }
+    for (let i = 0; i < req.body.certificationsLength; i++) {
+      certificationsArray.push(req.body.certifications[i.toString()]);
+    }
+    if (certificationsArray.length > 0) {
+      profileFields.certifications = certificationsArray;
+      console.log(profileFields.certifications);
+    }
     profileFields.instructor = req.instructor.id;
     if (req.body.jobTitle) profileFields.jobTitle = req.body.jobTitle;
     if (req.body.yearsTeaching) {
@@ -36,10 +53,6 @@ router.post("/", instructorAuth, async (req, res) => {
     }
     if (req.body.location) {
       profileFields.location = req.body.location;
-    }
-
-    if (req.body.certifications) {
-      profileFields.certifications = req.body.certifications;
     }
 
     if (req.body.ageRangePreferred) {

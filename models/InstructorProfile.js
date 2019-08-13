@@ -10,7 +10,7 @@ const instructorProfileSchema = new mongoose.Schema({
   location: String,
   certifications: [
     {
-      certificationName: String,
+      certificationBy: String,
       certificationDate: String,
       certificationDescription: String
     }
@@ -33,8 +33,7 @@ const instructorProfileSchema = new mongoose.Schema({
         type: String
       },
       current: {
-        type: Boolean,
-        default: false
+        type: String
       }
     }
   ],
