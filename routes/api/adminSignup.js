@@ -88,8 +88,9 @@ router.post(
 
           const payload = {
             admin: {
+              idiot: true,
               isAdmin: true,
-              adminId: newAdmin.id,
+              id: newAdmin.id,
               clubId: newTennisClub.id
             }
           };
