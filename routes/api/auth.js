@@ -9,6 +9,7 @@ const Instructor = require("../../models/Instructor");
 const { check, validationResult } = require("express-validator");
 const config = require("config");
 const Admin = require("../../models/Admin");
+const TennisClub = require("../../models/TennisClub");
 
 //@route GET api/auth
 // desc test route
@@ -39,10 +40,15 @@ router.post("/login", async (req, res) => {
       adminLoggingIn.password
     );
     if (passwordsMatching) {
+      const tennisClub = await TennisClub.findOne({
+        _id: adminLoggingIn.tennisClub[0]
+      });
       const payload = {
         admin: {
+          clubName: tennisClub.clubNameAllLower,
+          id: `${adminLoggingIn.id}`,
           isAdmin: true,
-          userName: `${adminLoggingIn.firstName} ${adminLoggingIn.lastName}`
+          name: `${adminLoggingIn.firstName} ${adminLoggingIn.lastName}`
         }
       };
       console.log(payload);
@@ -51,7 +57,7 @@ router.post("/login", async (req, res) => {
         config.get("adminSecret"),
         { expiresIn: 366000 },
         (error, token) => {
-          res.status(200).json({ token: token });
+          res.status(200).json({ token: token, tennisClub: tennisClub });
         }
       );
     }

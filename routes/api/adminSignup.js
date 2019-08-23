@@ -52,12 +52,12 @@ router.post(
           }
 
           let newTennisClub = new TennisClub({
-            clubNameAllLower: req.body.admin.tennisClub
+            clubNameAllLower: req.body.admin.clubName
               .split(" ")
               .reduce((accum, element) => {
                 return (accum += element);
               }),
-            clubName: req.body.admin.tennisClub,
+            clubName: req.body.admin.clubName,
             address: req.body.tennisClub.clubAddress,
             city: req.body.tennisClub.clubCity,
             zip: req.body.tennisClub.clubZip,
@@ -72,7 +72,7 @@ router.post(
           });
 
           let newAdmin = new Admin({
-            tennisClubName: req.body.admin.tennisClub,
+            clubName: req.body.admin.clubNameAllLower,
             firstName: req.body.admin.firstName,
             lastName: req.body.admin.lastName,
             email: req.body.admin.email,
@@ -88,7 +88,8 @@ router.post(
 
           const payload = {
             admin: {
-              idiot: true,
+              clubName: newTennisClub.clubNameAllLower,
+              name: `${newAdmin.firstName} ${newAdmin.lastName}`,
               isAdmin: true,
               id: newAdmin.id,
               clubId: newTennisClub.id
