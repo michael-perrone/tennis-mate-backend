@@ -5,6 +5,7 @@ const TennisClub = require("../../models/TennisClub");
 
 router.get("/", async (req, res) => {
   let clubs = await TennisClub.find({});
+  console.log(clubs);
   res.status(200).json({ clubs });
 });
 

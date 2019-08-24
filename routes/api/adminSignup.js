@@ -72,7 +72,7 @@ router.post(
           });
 
           let newAdmin = new Admin({
-            clubName: req.body.admin.clubNameAllLower,
+            clubName: newTennisClub.clubNameAllLower,
             firstName: req.body.admin.firstName,
             lastName: req.body.admin.lastName,
             email: req.body.admin.email,
