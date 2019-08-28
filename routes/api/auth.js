@@ -60,6 +60,8 @@ router.post("/login", async (req, res) => {
           res.status(200).json({ token: token, tennisClub: tennisClub });
         }
       );
+    } else {
+      res.status(400).json({ error: "Sorry mate not good" });
     }
   }
   if (userLoggingIn) {
@@ -116,9 +118,7 @@ router.post("/login", async (req, res) => {
       }
       const payload = {
         instructor: {
-          instructorName: `${instructorLoggingIn.firstName} ${
-            instructorLoggingIn.lastName
-          }`,
+          instructorName: `${instructorLoggingIn.firstName} ${instructorLoggingIn.lastName}`,
           isInstructor: true,
           id: instructorLoggingIn.id,
           clubName: instructorLoggingIn.tennisClub

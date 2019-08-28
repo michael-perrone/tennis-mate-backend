@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const TennisClubSchema = new mongoose.Schema({
+  phoneNumber: {
+    type: String
+  },
   clubNameAllLower: {
     type: String
   },
@@ -23,10 +26,6 @@ const TennisClubSchema = new mongoose.Schema({
   zip: {
     type: String,
     required: true
-  },
-  instructors: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "instructor"
   },
   numberCourts: {
     type: String,
@@ -55,16 +54,14 @@ const TennisClubSchema = new mongoose.Schema({
   events: {
     type: String
   },
-  services: {
-    type: [String]
-  },
   bio: {
     type: String
   },
   subscribers: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "user"
-  }
+  },
+  photo: String
 });
 const TennisClub = mongoose.model("tennisClub", TennisClubSchema);
 
