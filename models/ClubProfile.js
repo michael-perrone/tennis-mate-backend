@@ -16,5 +16,10 @@ const tennisClubProfileSchema = new mongoose.Schema({
       nameOfService: String,
       serviceDetail: String
     }
-  ]
+  ],
+  bio: String
 });
+
+const ClubProfile = mongoose.model("clubProfile", tennisClubProfileSchema);
+
+module.exports = ClubProfile;

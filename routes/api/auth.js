@@ -45,6 +45,7 @@ router.post("/login", async (req, res) => {
       });
       const payload = {
         admin: {
+          clubId: `${adminLoggingIn.tennisClub[0]._id}`,
           clubName: tennisClub.clubNameAllLower,
           id: `${adminLoggingIn.id}`,
           isAdmin: true,

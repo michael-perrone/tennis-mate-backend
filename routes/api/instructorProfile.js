@@ -5,6 +5,7 @@ const instructorAuth = require("../../middleware/authInstructor");
 const InstructorProfile = require("../../models/InstructorProfile");
 
 router.get("/myprofile", instructorAuth, async (req, res) => {
+  console.log(req.instructor);
   try {
     let instructorProfile = await InstructorProfile.findOne({
       instructor: req.instructor.id
