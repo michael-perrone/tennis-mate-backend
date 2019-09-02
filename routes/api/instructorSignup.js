@@ -53,6 +53,7 @@ router.post(
           let newInstructor = new Instructor({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
+            fullName: `${req.body.firstName} ${req.body.lastName}`,
             email: req.body.email,
             phoneNumber: req.body.phoneNumber,
             password: req.body.createPassword,
@@ -72,9 +73,7 @@ router.post(
             instructor: {
               id: newInstructor.id,
               instructor: true,
-              instructorName: `${newInstructor.firstName} ${
-                newInstructor.lastName
-              }`
+              instructorName: `${newInstructor.firstName} ${newInstructor.lastName}`
             }
           };
           jwt.sign(
