@@ -30,6 +30,18 @@ const InstructorSignUpSchema = new mongoose.Schema({
   },
   gender: {
     type: String
+  },
+  invitePending: {
+    type: Boolean,
+    default: false
+  },
+  clubAccepted: {
+    type: Boolean,
+    default: false
+  },
+  clubLeftOrDenied: {
+    type: Boolean,
+    default: false
   }
 });
 

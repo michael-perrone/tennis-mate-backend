@@ -25,20 +25,23 @@ router.get("/myclub", adminAuth, async (req, res) => {
 
 router.post("/", adminAuth, async (req, res) => {
   try {
+    console.log(req.body.instructors, "hi");
     let clubProfileFields = {};
     let instructorsArray = [];
     let servicesArray = [];
 
-    for (let i = 0; i < req.body.instructors.length; i++) {
-      instructorsArray.push(req.body.instructors[i.toString()]);
-    }
-
     if (instructorsArray.length > 0) {
+      for (let i = 0; i < req.body.instructors.length; i++) {
+        instructorsArray.push(req.body.instructors[i]);
+      }
       clubProfileFields.instructors = instructorsArray;
     }
 
-    for (let i = 0; i < req.body.services.length; i++) {
-      servicesArray.push(req.body.services[i.toString()]);
+    if (req.body.services && req.body.services.length > 0) {
+      for (let i = 0; i < req.body.services.length; i++) {
+        servicesArray.push(req.body.services[i]);
+      }
+      clubProfileFields.services = servicesArray;
     }
 
     if (servicesArray.length > 0) {
@@ -50,15 +53,19 @@ router.post("/", adminAuth, async (req, res) => {
     }
 
     let clubProfile = await ClubProfile.findOne({
-      tennisClub: req.tennisClub.id
+      tennisClub: req.admin.clubId
     });
 
     if (clubProfile) {
       clubProfile = await clubProfile.findOneAndUpdate(
-        { tennisClub: req.tennisClub.id },
+        { tennisClub: req.admin.clubId },
         { $set: clubProfileFields },
         { new: true }
       );
+    } else {
+      clubProfile = new ClubProfile(clubProfileFields);
+      await clubProfile.save();
+      res.json(clubProfile);
     }
   } catch (error) {
     console.log(error);
