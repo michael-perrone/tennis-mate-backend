@@ -62,7 +62,9 @@ router.post("/login", async (req, res) => {
         }
       );
     } else {
-      res.status(400).json({ error: "Sorry mate not good" });
+      res
+        .status(400)
+        .json({ error: "Email/Password Combination not recognized" });
     }
   }
   if (userLoggingIn) {
@@ -72,8 +74,8 @@ router.post("/login", async (req, res) => {
     );
     if (!passwordsMatching) {
       return res
-        .status(400)
-        .json({ errors: [{ msg: "Caught at passwords not matching user" }] });
+        .status(401)
+        .json({ error: "Email/Password Combination not recognized" });
     } else {
       const payload = {
         user: {
@@ -103,9 +105,9 @@ router.post("/login", async (req, res) => {
       email: req.body.email
     });
     if (!instructorLoggingIn) {
-      res
-        .status(400)
-        .json({ errors: [{ msg: "stuck at instructor username" }] });
+      res.status(400).json({
+        error: "Email/Password Combination not recognized"
+      });
     } else {
       const isPasswordMatching = await bcrypt.compare(
         req.body.password,
@@ -115,7 +117,7 @@ router.post("/login", async (req, res) => {
       if (!isPasswordMatching) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "stuck at instructor password" }] });
+          .json({ error: "Email/Password Combination not recognized" });
       }
       const payload = {
         instructor: {

@@ -8,7 +8,6 @@ router.get("/myclub", adminAuth, async (req, res) => {
   console.log(req.admin);
   try {
     let clubs = await ClubProfile.find({});
-    console.log(clubs);
     let clubProfile = await ClubProfile.findOne({
       tennisClub: req.admin.clubId
     }).populate("tennisClub", ["clubname"]);
@@ -56,13 +55,17 @@ router.post("/", adminAuth, async (req, res) => {
       tennisClub: req.admin.clubId
     });
 
+    clubProfileFields.tennisClub = req.admin.clubId;
+
     if (clubProfile) {
+      console.log("HER3WJWKJQWKEJQKWJEQWKEJQKWJEWKQJEK");
       clubProfile = await clubProfile.findOneAndUpdate(
         { tennisClub: req.admin.clubId },
         { $set: clubProfileFields },
         { new: true }
       );
     } else {
+      console.log("creating");
       clubProfile = new ClubProfile(clubProfileFields);
       await clubProfile.save();
       res.json(clubProfile);
