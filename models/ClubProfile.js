@@ -12,10 +12,12 @@ const tennisClubProfileSchema = new mongoose.Schema({
     }
   ],
   services: [
-    {
-      nameOfService: String,
-      serviceDetail: String
-    }
+    { tennisLessons: String },
+    { tournaments: String },
+    { summerProgram: String },
+    { gym: String },
+    { racquetStringing: String },
+    { groupClinics: String }
   ],
   bio: String
 });

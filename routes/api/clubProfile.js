@@ -29,7 +29,7 @@ router.post("/", adminAuth, async (req, res) => {
     let instructorsArray = [];
     let servicesArray = [];
 
-    if (instructorsArray.length > 0) {
+    if (req.body.instructors && req.body.instructors.length > 0) {
       for (let i = 0; i < req.body.instructors.length; i++) {
         instructorsArray.push(req.body.instructors[i]);
       }
@@ -59,11 +59,12 @@ router.post("/", adminAuth, async (req, res) => {
 
     if (clubProfile) {
       console.log("HER3WJWKJQWKEJQKWJEQWKEJQKWJEWKQJEK");
-      clubProfile = await clubProfile.findOneAndUpdate(
+      clubProfile = await ClubProfile.findOneAndUpdate(
         { tennisClub: req.admin.clubId },
         { $set: clubProfileFields },
         { new: true }
       );
+      return res.json(clubProfile);
     } else {
       console.log("creating");
       clubProfile = new ClubProfile(clubProfileFields);
