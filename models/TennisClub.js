@@ -61,7 +61,11 @@ const TennisClubSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "user"
   },
-  photo: String
+  photo: String,
+  clubProfile: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "clubProfile"
+  }
 });
 const TennisClub = mongoose.model("tennisClub", TennisClubSchema);
 

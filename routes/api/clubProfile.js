@@ -28,6 +28,7 @@ router.post("/", adminAuth, async (req, res) => {
     let clubProfileFields = {};
     let instructorsArray = [];
     let servicesArray = [];
+    let otherServices = [];
 
     if (req.body.instructors && req.body.instructors.length > 0) {
       for (let i = 0; i < req.body.instructors.length; i++) {
@@ -39,8 +40,20 @@ router.post("/", adminAuth, async (req, res) => {
     if (req.body.services && req.body.services.length > 0) {
       for (let i = 0; i < req.body.services.length; i++) {
         servicesArray.push(req.body.services[i]);
+        console.log(req.body.services[i]);
       }
       clubProfileFields.services = servicesArray;
+    }
+
+    if (req.body.otherServices && req.body.otherServices.length > 0) {
+      for (let i = 0; i < req.body.otherServices.length; i++) {
+        otherServices.push(req.body.otherServices[i]);
+      }
+      console.log(otherServices, "me");
+    }
+
+    if (req.body.otherServices && req.body.otherServices.length > 0) {
+      clubProfileFields.otherServices = otherServices;
     }
 
     if (servicesArray.length > 0) {
@@ -58,7 +71,6 @@ router.post("/", adminAuth, async (req, res) => {
     clubProfileFields.tennisClub = req.admin.clubId;
 
     if (clubProfile) {
-      console.log("HER3WJWKJQWKEJQKWJEQWKEJQKWJEWKQJEK");
       clubProfile = await ClubProfile.findOneAndUpdate(
         { tennisClub: req.admin.clubId },
         { $set: clubProfileFields },

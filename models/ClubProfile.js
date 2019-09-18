@@ -11,15 +11,9 @@ const tennisClubProfileSchema = new mongoose.Schema({
       ref: "instructor"
     }
   ],
-  services: [
-    { tennisLessons: String },
-    { tournaments: String },
-    { summerProgram: String },
-    { gym: String },
-    { racquetStringing: String },
-    { groupClinics: String }
-  ],
-  bio: String
+  services: [],
+  bio: String,
+  otherServices: []
 });
 
 const ClubProfile = mongoose.model("clubProfile", tennisClubProfileSchema);

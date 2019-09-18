@@ -24,6 +24,7 @@ app.use("/api/adminSignup", require("./routes/api/adminSignup"));
 app.use("/api/clubsList", require("./routes/api/clubsList"));
 app.use("/api/clubProfile", require("./routes/api/clubProfile"));
 app.use("/api/instructorList", require("./routes/api/instructorList"));
+app.use("/api/getInstructors", require("./routes/api/getInstructors"));
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
