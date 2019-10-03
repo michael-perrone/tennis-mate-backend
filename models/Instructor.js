@@ -42,7 +42,7 @@ const InstructorSignUpSchema = new mongoose.Schema({
   clubLeftOrDenied: {
     type: Boolean,
     default: false
-  }
+  },
 });
 
 const Instructor = mongoose.model("instructor", InstructorSignUpSchema);

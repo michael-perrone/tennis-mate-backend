@@ -25,6 +25,8 @@ app.use("/api/clubsList", require("./routes/api/clubsList"));
 app.use("/api/clubProfile", require("./routes/api/clubProfile"));
 app.use("/api/instructorList", require("./routes/api/instructorList"));
 app.use("/api/getInstructors", require("./routes/api/getInstructors"));
+app.use('/api/saveLocation', require('./routes/api/saveLocation'));
+app.use('/api/getUserLocationInfo', require('./routes/api/getUserLocationInfo'));
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {

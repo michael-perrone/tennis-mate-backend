@@ -17,11 +17,10 @@ router.get("/", async (req, res) => {
     });
     clubProfiles.push({ profile: clubProfile, clubs: allClubs[i] });
   }
-  console.log(clubProfiles);
+  
 
   const clubInfoToSendBack = [];
 
-  console.log(allClubs);
   res.status(200).json({ clubs: clubProfiles });
 });
 

@@ -30,6 +30,21 @@ const UserSchema = new mongoose.Schema({
   },
   skillLevel: {
     type: String
+  },
+  locationState: {
+    type: String,
+    default: "No Location Saved"
+  },
+  locationTown: {
+    type: String,
+    default: "No Location Saved"
+  },
+  locationSaved: {
+    type: Boolean
+  },
+  locationDenied: {
+    type: Boolean,
+    default: false
   }
 });
 
