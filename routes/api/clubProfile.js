@@ -3,6 +3,7 @@ const router = express.Router();
 const TennisClub = require("../../models/TennisClub");
 const adminAuth = require("../../middleware/authAdmin");
 const ClubProfile = require("../../models/ClubProfile");
+const Instructor = require('../../models/Instructor');
 
 router.get("/myclub", adminAuth, async (req, res) => {
   console.log(req.admin);
@@ -11,11 +12,13 @@ router.get("/myclub", adminAuth, async (req, res) => {
     let clubProfile = await ClubProfile.findOne({
       tennisClub: req.admin.clubId
     }).populate("tennisClub", ["clubname"]);
+    if(clubProfile) {
+    const instructorsToSendBack = await Instructor.find({_id: clubProfile.instructors})
+    clubProfile.instructors = instructorsToSendBack;
+    return res.status(200).json({ clubProfile, profileCreated: true });
+    }
     if (!clubProfile) {
       return res.status(200).json({ profileCreated: false });
-    }
-    if (clubProfile) {
-      return res.status(200).json({ clubProfile, profileCreated: true });
     }
   } catch (error) {
     console.log(error);

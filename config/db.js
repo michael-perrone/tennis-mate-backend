@@ -8,7 +8,7 @@ const connectDatabase = async () => {
       useNewUrlParser: true,
       useCreateIndex: true
     });
-    // mongod.exe --dbpath "\Users\Craigslist\Desktop\mongodb-data"
+    // .\mongod.exe --dbpath "\Users\Craigslist\Desktop\mongodb-data"
     console.log("mongodb connected");
   } catch (err) {
     console.log(err.message);
