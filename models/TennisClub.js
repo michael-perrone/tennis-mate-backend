@@ -31,19 +31,11 @@ const TennisClubSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  clubOpenTimeNumber: {
+  clubOpenTime: {
     type: String,
     required: true
   },
-  clubOpenTimeAMPM: {
-    type: String,
-    required: true
-  },
-  clubCloseTimeNumber: {
-    type: String,
-    required: true
-  },
-  clubCloseTimeAMPM: {
+  clubCloseTime: {
     type: String,
     required: true
   },

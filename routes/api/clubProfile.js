@@ -39,6 +39,10 @@ router.post("/", adminAuth, async (req, res) => {
       }
       clubProfileFields.instructors = instructorsArray;
     }
+    
+    if (req.body.instructors && req.body.instructors.length < 1) {
+      clubProfileFields.instructors = []
+    }
 
     if (req.body.services && req.body.services.length > 0) {
       for (let i = 0; i < req.body.services.length; i++) {

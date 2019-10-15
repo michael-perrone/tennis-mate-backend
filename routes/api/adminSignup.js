@@ -63,13 +63,12 @@ router.post(
             zip: req.body.tennisClub.clubZip,
             state: req.body.tennisClub.clubState,
             numberCourts: req.body.tennisClub.numberCourts,
-            clubOpenTimeNumber: req.body.tennisClub.clubOpenTimeNumber,
-            clubOpenTimeAMPM: req.body.tennisClub.clubOpenTimeAMPM,
-            clubCloseTimeNumber: req.body.tennisClub.clubCloseTimeNumber,
-            clubCloseTimeAMPM: req.body.tennisClub.clubCloseTimeAMPM,
+            clubOpenTime: req.body.tennisClub.clubOpenTime,
+            clubCloseTime: req.body.tennisClub.clubCloseTime,
             clubWebsite: req.body.tennisClub.clubWebsite,
             phoneNumber: req.body.tennisClub.phoneNumber
           });
+          console.log(newTennisClub)
 
           let newAdmin = new Admin({
             clubName: newTennisClub.clubNameAllLower,
