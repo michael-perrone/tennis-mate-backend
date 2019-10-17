@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 app.use("/api/courtBooked", require("./routes/api/courtBooked"));
 app.use("/api/timeSlotBooked", require("./routes/api/timeSlotBooked"));
 app.use("/api/club", require("./routes/api/club"));
-app.use("/api/usersSignup", require("./routes/api/usersSignup"));
+app.use("/api/u sersSignup", require("./routes/api/usersSignup"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/instructorSignup", require("./routes/api/instructorSignup"));
 app.use("/api/posts", require("./routes/api/posts"));
@@ -25,8 +25,12 @@ app.use("/api/clubsList", require("./routes/api/clubsList"));
 app.use("/api/clubProfile", require("./routes/api/clubProfile"));
 app.use("/api/instructorList", require("./routes/api/instructorList"));
 app.use("/api/getInstructors", require("./routes/api/getInstructors"));
-app.use('/api/saveLocation', require('./routes/api/saveLocation'));
-app.use('/api/getUserLocationInfo', require('./routes/api/getUserLocationInfo'));
+app.use("/api/saveLocation", require("./routes/api/saveLocation"));
+app.use(
+  "/api/getUserLocationInfo",
+  require("./routes/api/getUserLocationInfo")
+);
+app.use("/api/clubProfileEvents", require("./routes/api/clubProfileEvents"));
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {

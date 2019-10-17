@@ -12,6 +12,7 @@ const tennisClubProfileSchema = new mongoose.Schema({
     }
   ],
   services: [],
+  events: [],
   bio: String,
   otherServices: []
 });
