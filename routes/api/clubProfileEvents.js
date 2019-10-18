@@ -5,15 +5,16 @@ const adminAuth = require("../../middleware/authAdmin");
 
 router.post("/", adminAuth, async (req, res) => {
   try {
-    if (req.body.events && req.body.events.length > 0) {
+    console.log(req.body);
+    if (req.body.eventsArray && req.body.eventsArray.length > 0) {
       let clubProfile = await ClubProfile.findOneAndUpdate(
         { tennisClub: req.admin.clubId },
-        { $set: { events: req.body.events } },
+        { $set: { events: req.body.eventsArray } },
         { new: true }
       );
       await clubProfile.save();
       res.json({ updatedProfile: clubProfile });
-    } else if (req.body.events.length === 0) {
+    } else if (req.body.eventsArray.length === 0) {
       let clubProfile = await ClubProfile.findOneAndUpdate(
         { tennisClub: req.admin.clubId },
         { $set: { events: [] } },
