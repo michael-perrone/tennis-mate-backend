@@ -7,7 +7,19 @@ const CourtBookedSchema = new mongoose.Schema({
   courtIds: [String],
   minutes: String,
   clubName: String,
-  date: String
+  date: String,
+  instructorName: {
+    type: String,
+    default: "None"
+  },
+  instructorBooked: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "instructor"
+  },
+  bookingType: {
+    required: true,
+    type: String
+  }
 });
 
 const CourtBooked = mongoose.model("courtBooked", CourtBookedSchema);

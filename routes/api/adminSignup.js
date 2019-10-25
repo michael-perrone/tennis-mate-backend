@@ -68,7 +68,6 @@ router.post(
             clubWebsite: req.body.tennisClub.clubWebsite,
             phoneNumber: req.body.tennisClub.phoneNumber
           });
-          console.log(newTennisClub)
 
           let newAdmin = new Admin({
             clubName: newTennisClub.clubNameAllLower,
@@ -107,7 +106,6 @@ router.post(
               }
             }
           );
-          console.log(payload);
           await newAdmin.save();
           await newTennisClub.save();
           return res.status(200).json({ success: "good shit bro" });

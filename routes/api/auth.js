@@ -31,8 +31,6 @@ router.post("/login", async (req, res) => {
   let adminLoggingIn = await Admin.findOne({ email: req.body.email });
 
   let userLoggingIn = await User.findOne({ email: req.body.email });
-  console.log(adminLoggingIn, "am i null");
-  console.log(userLoggingIn, "am i null");
 
   if (adminLoggingIn) {
     const passwordsMatching = await bcrypt.compare(
@@ -52,7 +50,6 @@ router.post("/login", async (req, res) => {
           name: `${adminLoggingIn.firstName} ${adminLoggingIn.lastName}`
         }
       };
-      console.log(payload);
       jwt.sign(
         payload,
         config.get("adminSecret"),
@@ -84,7 +81,6 @@ router.post("/login", async (req, res) => {
           id: userLoggingIn.id
         }
       };
-      console.log(payload);
 
       jwt.sign(
         payload,
@@ -127,7 +123,6 @@ router.post("/login", async (req, res) => {
           clubName: instructorLoggingIn.tennisClub
         }
       };
-      console.log(payload);
       jwt.sign(
         payload,
         config.get("instructorSecret"),

@@ -43,6 +43,12 @@ const InstructorSignUpSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  bookings: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "courtBooked"
+    }
+  ]
 });
 
 const Instructor = mongoose.model("instructor", InstructorSignUpSchema);
