@@ -5,7 +5,6 @@ const UserProfile = require("../../models/UserProfile");
 const User = require("../../models/User");
 
 router.get("/myprofile", authUser, async (req, res) => {
-  console.log(req.body);
   try {
     const profile = await UserProfile.findOne({ user: req.user.id }).populate(
       "user",
@@ -19,7 +18,6 @@ router.get("/myprofile", authUser, async (req, res) => {
       });
     }
     if (profile) {
-      console.log("im here!");
       res.status(200).json({ profile });
     }
   } catch (err) {

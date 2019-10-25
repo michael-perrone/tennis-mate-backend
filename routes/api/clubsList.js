@@ -17,9 +17,6 @@ router.get("/", async (req, res) => {
     });
     clubProfiles.push({ profile: clubProfile, clubs: allClubs[i] });
   }
-  
-
-  const clubInfoToSendBack = [];
 
   res.status(200).json({ clubs: clubProfiles });
 });

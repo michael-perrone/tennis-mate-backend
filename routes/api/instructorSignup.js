@@ -9,9 +9,6 @@ const User = require("../../models/User");
 
 const Instructor = require("../../models/Instructor");
 
-//@route POST api/users
-// desc register user
-// access public
 router.post(
   "/",
   [
@@ -61,13 +58,11 @@ router.post(
             age: req.body.age,
             gender: req.body.gender
           });
-          console.log(newInstructor);
           const salt = await bcrypt.genSalt(10);
           newInstructor.password = await bcrypt.hash(
             req.body.createPassword,
             salt
           );
-
           await newInstructor.save();
           const payload = {
             instructor: {
@@ -88,7 +83,6 @@ router.post(
               }
             }
           );
-          console.log(payload);
         } catch (error) {
           console.log(error.message);
           res.status(500).send("Server Error");

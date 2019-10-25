@@ -8,9 +8,6 @@ const config = require("config");
 const Admin = require("../../models/Admin.js");
 const Instructor = require("../../models/Instructor.js");
 
-//@route POST api/users
-// desc register user
-// access public
 router.post("/", async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   let admin = await Admin.findOne({ email: req.body.email });

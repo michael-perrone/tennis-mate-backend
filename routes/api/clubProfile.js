@@ -3,19 +3,20 @@ const router = express.Router();
 const TennisClub = require("../../models/TennisClub");
 const adminAuth = require("../../middleware/authAdmin");
 const ClubProfile = require("../../models/ClubProfile");
-const Instructor = require('../../models/Instructor');
+const Instructor = require("../../models/Instructor");
 
 router.get("/myclub", adminAuth, async (req, res) => {
-  console.log(req.admin);
   try {
     let clubs = await ClubProfile.find({});
     let clubProfile = await ClubProfile.findOne({
       tennisClub: req.admin.clubId
     }).populate("tennisClub", ["clubname"]);
-    if(clubProfile) {
-    const instructorsToSendBack = await Instructor.find({_id: clubProfile.instructors})
-    clubProfile.instructors = instructorsToSendBack;
-    return res.status(200).json({ clubProfile, profileCreated: true });
+    if (clubProfile) {
+      const instructorsToSendBack = await Instructor.find({
+        _id: clubProfile.instructors
+      });
+      clubProfile.instructors = instructorsToSendBack;
+      return res.status(200).json({ clubProfile, profileCreated: true });
     }
     if (!clubProfile) {
       return res.status(200).json({ profileCreated: false });
@@ -27,7 +28,6 @@ router.get("/myclub", adminAuth, async (req, res) => {
 
 router.post("/", adminAuth, async (req, res) => {
   try {
-    console.log(req.body.instructors, "hi");
     let clubProfileFields = {};
     let instructorsArray = [];
     let servicesArray = [];
@@ -39,9 +39,9 @@ router.post("/", adminAuth, async (req, res) => {
       }
       clubProfileFields.instructors = instructorsArray;
     }
-    
+
     if (req.body.instructors && req.body.instructors.length < 1) {
-      clubProfileFields.instructors = []
+      clubProfileFields.instructors = [];
     }
 
     if (req.body.services && req.body.services.length > 0) {
@@ -56,7 +56,6 @@ router.post("/", adminAuth, async (req, res) => {
       for (let i = 0; i < req.body.otherServices.length; i++) {
         otherServices.push(req.body.otherServices[i]);
       }
-      console.log(otherServices, "me");
     }
 
     if (req.body.otherServices && req.body.otherServices.length > 0) {
@@ -85,7 +84,6 @@ router.post("/", adminAuth, async (req, res) => {
       );
       return res.json(clubProfile);
     } else {
-      console.log("creating");
       clubProfile = new ClubProfile(clubProfileFields);
       await clubProfile.save();
       res.json(clubProfile);

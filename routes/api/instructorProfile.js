@@ -5,7 +5,6 @@ const instructorAuth = require("../../middleware/authInstructor");
 const InstructorProfile = require("../../models/InstructorProfile");
 
 router.get("/myprofile", instructorAuth, async (req, res) => {
-  console.log(req.instructor);
   try {
     let instructorProfile = await InstructorProfile.findOne({
       instructor: req.instructor.id
@@ -25,14 +24,12 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
 
 router.post("/", instructorAuth, async (req, res) => {
   try {
-    console.log(req.body.jobExperience["0"]);
     let profileFields = {};
     let jobExpArray = [];
     let certificationsArray = [];
     for (let i = 0; i < req.body.jobExpLength; i++) {
       jobExpArray.push(req.body.jobExperience[i.toString()]);
     }
-    console.log(jobExpArray);
     if (jobExpArray.length > 0) {
       profileFields.jobExperience = jobExpArray;
     }
@@ -41,7 +38,6 @@ router.post("/", instructorAuth, async (req, res) => {
     }
     if (certificationsArray.length > 0) {
       profileFields.certifications = certificationsArray;
-      console.log(profileFields.certifications);
     }
     profileFields.instructor = req.instructor.id;
     if (req.body.jobTitle) profileFields.jobTitle = req.body.jobTitle;

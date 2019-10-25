@@ -14,10 +14,9 @@ app.get("/", (req, res) => {
 app.use("/api/courtBooked", require("./routes/api/courtBooked"));
 app.use("/api/timeSlotBooked", require("./routes/api/timeSlotBooked"));
 app.use("/api/club", require("./routes/api/club"));
-app.use("/api/u sersSignup", require("./routes/api/usersSignup"));
+app.use("/api/usersSignup", require("./routes/api/usersSignup"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/instructorSignup", require("./routes/api/instructorSignup"));
-app.use("/api/posts", require("./routes/api/posts"));
 app.use("/api/instructorProfile", require("./routes/api/instructorProfile"));
 app.use("/api/userProfile", require("./routes/api/userProfile"));
 app.use("/api/adminSignup", require("./routes/api/adminSignup"));

@@ -5,7 +5,6 @@ const adminAuth = require("../../middleware/authAdmin");
 
 router.post("/", adminAuth, async (req, res) => {
   try {
-    console.log(req.body);
     if (req.body.eventsArray && req.body.eventsArray.length > 0) {
       let clubProfile = await ClubProfile.findOneAndUpdate(
         { tennisClub: req.admin.clubId },

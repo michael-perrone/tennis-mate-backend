@@ -28,11 +28,8 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/getcourts", async (req, res) => {
-  console.log("hi");
-  console.log(req.body.clubName);
   try {
     const bookings = await CourtBooked.find({ clubName: req.body.clubName });
-    console.log(bookings);
     if (bookings.length > 0) {
       res.status(200).json({ bookings });
     }
@@ -40,5 +37,4 @@ router.post("/getcourts", async (req, res) => {
     console.log(error);
   }
 });
-
 module.exports = router;
