@@ -8,7 +8,14 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
   try {
     let instructorProfile = await InstructorProfile.findOne({
       instructor: req.instructor.id
-    }).populate("instructor", ["firstName", "lastName", "tennisClub"]);
+    }).populate("instructor", [
+      "firstName",
+      "lastName",
+      "tennisClub",
+      "requestFrom",
+      "requestPending",
+      "tennisClubTeachingAt"
+    ]);
     if (!instructorProfile) {
       return res.status(200).json({ profileCreated: false });
     }
