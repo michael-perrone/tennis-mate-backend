@@ -30,6 +30,10 @@ app.use(
   require("./routes/api/getUserLocationInfo")
 );
 app.use("/api/clubProfileEvents", require("./routes/api/clubProfileEvents"));
+app.use(
+  "/api/instructorCourtsBooked",
+  require("./routes/api/instructorCourtsBooked")
+);
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {

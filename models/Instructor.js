@@ -25,16 +25,6 @@ const InstructorSignUpSchema = new mongoose.Schema({
   tennisClub: {
     type: String
   },
-  age: {
-    type: String
-  },
-  gender: {
-    type: String
-  },
-  invitePending: {
-    type: Boolean,
-    default: false
-  },
   clubAccepted: {
     type: Boolean,
     default: false
@@ -48,7 +38,19 @@ const InstructorSignUpSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "courtBooked"
     }
-  ]
+  ],
+  tennisClubTeachingAt: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "tennisClub"
+  },
+  requestPending: {
+    type: Boolean,
+    default: false
+  },
+  requestFrom: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "tennisClub"
+  }
 });
 
 const Instructor = mongoose.model("instructor", InstructorSignUpSchema);

@@ -15,6 +15,7 @@ router.get("/myclub", adminAuth, async (req, res) => {
       const instructorsToSendBack = await Instructor.find({
         _id: clubProfile.instructors
       });
+
       clubProfile.instructors = instructorsToSendBack;
       return res.status(200).json({ clubProfile, profileCreated: true });
     }
@@ -35,6 +36,12 @@ router.post("/", adminAuth, async (req, res) => {
 
     if (req.body.instructors && req.body.instructors.length > 0) {
       for (let i = 0; i < req.body.instructors.length; i++) {
+        let loneInstructor = await Instructor.findById({
+          _id: req.body.instructors[i]
+        });
+        loneInstructor.requestFrom = req.admin.clubId;
+        loneInstructor.requestPending = true;
+        await loneInstructor.save();
         instructorsArray.push(req.body.instructors[i]);
       }
       clubProfileFields.instructors = instructorsArray;
@@ -47,7 +54,6 @@ router.post("/", adminAuth, async (req, res) => {
     if (req.body.services && req.body.services.length > 0) {
       for (let i = 0; i < req.body.services.length; i++) {
         servicesArray.push(req.body.services[i]);
-        console.log(req.body.services[i]);
       }
       clubProfileFields.services = servicesArray;
     }

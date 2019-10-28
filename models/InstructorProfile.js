@@ -6,7 +6,6 @@ const instructorProfileSchema = new mongoose.Schema({
     ref: "instructor"
   },
   yearsTeaching: String,
-  previousCurrentRanking: String,
   location: String,
   certifications: [
     {
@@ -39,16 +38,7 @@ const instructorProfileSchema = new mongoose.Schema({
   ],
   bio: String,
   photo: String,
-  lessonRate: String,
-  tennisClubTeachingAt: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "tennisClub"
-  },
-  requestPending: Boolean,
-  requestFrom: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "tennisClub"
-  }
+  lessonRate: String
 });
 
 const InstructorProfile = mongoose.model(

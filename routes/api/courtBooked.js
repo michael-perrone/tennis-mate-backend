@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
 
     if (newCourtBooked) {
       const bookings = await CourtBooked.find({ clubName: req.body.clubName });
-      res.status(200).json({ bookings });
+      res.status(200).json({ newBooking: newCourtBooked, bookings });
     }
   } catch (error) {
     console.log(error);
