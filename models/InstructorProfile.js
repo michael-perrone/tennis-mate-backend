@@ -9,9 +9,8 @@ const instructorProfileSchema = new mongoose.Schema({
   location: String,
   certifications: [
     {
-      certificationBy: String,
-      certificationDate: String,
-      certificationDescription: String
+      certifiedBy: String,
+      certificationDate: String
     }
   ],
   jobExperience: [
@@ -20,20 +19,7 @@ const instructorProfileSchema = new mongoose.Schema({
       clubName: {
         type: String
       },
-      fromMonth: {
-        type: String
-      },
-      fromYear: String,
-      toMonth: {
-        type: String
-      },
-      toYear: String,
-      description: {
-        type: String
-      },
-      current: {
-        type: String
-      }
+      jobDuration: Number
     }
   ],
   bio: String,

@@ -30,24 +30,41 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
 });
 
 router.post("/", instructorAuth, async (req, res) => {
+  let instructorProfileExisting = await InstructorProfile.findOne({
+    instructor: req.instructor.id
+  });
   try {
     let profileFields = {};
-    let jobExpArray = [];
-    let certificationsArray = [];
-    for (let i = 0; i < req.body.jobExpLength; i++) {
-      jobExpArray.push(req.body.jobExperience[i.toString()]);
+    if (req.body.jobExperience && req.body.jobExperience.length > 0) {
+      if (
+        instructorProfileExisting &&
+        instructorProfileExisting.jobExperience.length > 0
+      ) {
+        profileFields.jobExperience = [
+          ...req.body.jobExperience,
+          ...instructorProfileExisting.jobExperience
+        ];
+      } else {
+        profileFields.jobExperience = req.body.jobExperience;
+      }
     }
-    if (jobExpArray.length > 0) {
-      profileFields.jobExperience = jobExpArray;
-    }
-    for (let i = 0; i < req.body.certificationsLength; i++) {
-      certificationsArray.push(req.body.certifications[i.toString()]);
-    }
-    if (certificationsArray.length > 0) {
-      profileFields.certifications = certificationsArray;
+    if (req.body.certifications && req.body.certifications.length > 0) {
+      if (
+        instructorProfileExisting &&
+        instructorProfileExisting.certifications.length > 0
+      ) {
+        profileFields.certifications = [
+          ...req.body.certifications,
+          ...instructorProfileExisting.certifications
+        ];
+      } else {
+        profileFields.certifications = req.body.certifications;
+      }
     }
     profileFields.instructor = req.instructor.id;
-    if (req.body.jobTitle) profileFields.jobTitle = req.body.jobTitle;
+    if (req.body.jobTitle) {
+      profileFields.jobTitle = req.body.jobTitle;
+    }
     if (req.body.yearsTeaching) {
       profileFields.yearsTeaching = req.body.yearsTeaching;
     }
