@@ -39,6 +39,7 @@ router.post("/", adminAuth, async (req, res) => {
         let loneInstructor = await Instructor.findById({
           _id: req.body.instructors[i]
         });
+        loneInstructor.notifcations = loneInstructor.notifcations + 1;
         loneInstructor.requestFrom = req.admin.clubId;
         loneInstructor.requestPending = true;
         await loneInstructor.save();

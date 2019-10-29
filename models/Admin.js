@@ -32,6 +32,10 @@ const AdminSchema = new mongoose.Schema({
   tennisClub: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "tennisClub"
+  },
+  Notifications: {
+    type: Number,
+    default: 0
   }
 });
 const Admin = mongoose.model("admin", AdminSchema);

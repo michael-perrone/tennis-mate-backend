@@ -50,7 +50,12 @@ const InstructorSignUpSchema = new mongoose.Schema({
   requestFrom: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "tennisClub"
-  }
+  },
+  notificationsNumber: {
+    type: Number,
+    default: 0
+  },
+  notifications: []
 });
 
 const Instructor = mongoose.model("instructor", InstructorSignUpSchema);

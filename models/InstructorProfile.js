@@ -19,7 +19,7 @@ const instructorProfileSchema = new mongoose.Schema({
       clubName: {
         type: String
       },
-      jobDuration: Number
+      jobDuration: String
     }
   ],
   bio: String,
