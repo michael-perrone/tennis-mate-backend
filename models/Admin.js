@@ -1,10 +1,6 @@
 const mongoose = require("mongoose");
 
 const AdminSchema = new mongoose.Schema({
-  tennisClubAdminOf: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "tennisClub"
-  },
   firstName: {
     type: String,
     required: true
@@ -30,12 +26,12 @@ const AdminSchema = new mongoose.Schema({
     required: true
   },
   tennisClub: {
-    type: [mongoose.Schema.Types.ObjectId],
+    type: mongoose.Schema.Types.ObjectId,
     ref: "tennisClub"
   },
-  Notifications: {
-    type: Number,
-    default: 0
+  notifications: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "notification"
   }
 });
 const Admin = mongoose.model("admin", AdminSchema);

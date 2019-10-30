@@ -11,6 +11,7 @@ app.use(express.json({ extended: false }));
 app.get("/", (req, res) => {
   res.send("hi");
 });
+app.use("/api/notifications", require("./routes/api/notifications"));
 app.use("/api/courtBooked", require("./routes/api/courtBooked"));
 app.use("/api/timeSlotBooked", require("./routes/api/timeSlotBooked"));
 app.use("/api/club", require("./routes/api/club"));

@@ -39,11 +39,11 @@ router.post("/login", async (req, res) => {
     );
     if (passwordsMatching) {
       const tennisClub = await TennisClub.findOne({
-        _id: adminLoggingIn.tennisClub[0]
+        _id: adminLoggingIn.tennisClub
       });
       const payload = {
         admin: {
-          clubId: `${adminLoggingIn.tennisClub[0]._id}`,
+          clubId: `${adminLoggingIn.tennisClub._id}`,
           clubName: tennisClub.clubNameAllLower,
           id: `${adminLoggingIn.id}`,
           isAdmin: true,

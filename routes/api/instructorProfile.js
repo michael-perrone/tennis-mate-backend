@@ -15,7 +15,7 @@ router.get("/myprofile", instructorAuth, async (req, res) => {
       "requestFrom",
       "requestPending",
       "tennisClubTeachingAt",
-      "notificationsNumber"
+      "notifications"
     ]);
     if (!instructorProfile) {
       return res.status(200).json({ profileCreated: false });

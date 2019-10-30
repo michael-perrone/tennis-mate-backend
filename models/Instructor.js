@@ -51,11 +51,10 @@ const InstructorSignUpSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "tennisClub"
   },
-  notificationsNumber: {
-    type: Number,
-    default: 0
-  },
-  notifications: []
+  notifications: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "notification"
+  }
 });
 
 const Instructor = mongoose.model("instructor", InstructorSignUpSchema);
