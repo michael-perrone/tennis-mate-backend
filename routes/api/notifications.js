@@ -11,13 +11,6 @@ router.get("/instructornotifications", instructorAuth, async (req, res) => {
   res.status(200).json(notifications);
 });
 
-router.get("/", async (req, res) => {
-  const notification = await Notification.findById({
-    _id: "5db93d4fe0d1650d8401d01c"
-  });
-  res.json(notification);
-});
-
 router.post("/instructoraddedtoclubnotification", async (req, res) => {
   try {
     const tennisClub = await TennisClub.findById({
@@ -33,7 +26,6 @@ router.post("/instructoraddedtoclubnotification", async (req, res) => {
       const instructor = await Instructor.findById({
         _id: req.body.instructors[i]
       });
-      console.log(instructor, "ME MEE MEMEMEE");
       const instructorNotifications = [
         notification,
         ...instructor.notifications
@@ -41,6 +33,7 @@ router.post("/instructoraddedtoclubnotification", async (req, res) => {
       instructor.notifications = instructorNotifications;
       instructor.save();
     }
+    notification.save();
   } catch (error) {
     console.log(error);
   }
