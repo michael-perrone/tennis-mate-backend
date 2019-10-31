@@ -6,9 +6,24 @@ const Notification = require("../../models/Notification");
 const TennisClub = require("../../models/TennisClub");
 
 router.get("/instructornotifications", instructorAuth, async (req, res) => {
-  const instructor = await Instructor.findById({ _id: req.instructor._id });
-  const notifications = instructor.notifications;
-  res.status(200).json(notifications);
+  try {
+    let instructor = await Instructor.findOne({ _id: req.instructor.id });
+    let notificationArray = [];
+    for (let i = 0; i < instructor.notifications.length; i++) {
+      console.log(instructor.notifications[i]);
+      let notification = await Notification.findOne({
+        _id: instructor.notifications[i]
+      });
+
+      console.log(notification);
+      if (notification) {
+        notificationArray.push(notification);
+      }
+    }
+    res.status(200).json(notificationArray);
+  } catch (erorr) {
+    console.log(error);
+  }
 });
 
 router.post("/instructoraddedtoclubnotification", async (req, res) => {
