@@ -16,7 +16,8 @@ const notificationSchema = new mongoose.Schema({
   notificationFromTennisClub: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "tennisClub"
-  }
+  },
+  answer: String
 });
 
 const Notification = mongoose.model("notification", notificationSchema);

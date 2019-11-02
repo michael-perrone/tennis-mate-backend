@@ -49,6 +49,11 @@ router.post("/instructorclickedyes", async (req, res) => {
     instructor.tennisClub = req.body.clubName;
     instructor.clubAccepted = true;
     await instructor.save();
+    let notification = await Notification.findOne({
+      _id: req.body.notificationId
+    });
+    notification.answer = "Accepted";
+    await notification.save();
     res.status(200).json({ instructor: instructor });
   } catch (error) {
     console.log(error);
