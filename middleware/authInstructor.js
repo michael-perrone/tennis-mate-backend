@@ -12,7 +12,6 @@ module.exports = function(req, res, next) {
     const decodedToken = jwt.verify(token, config.get("instructorSecret"));
     req.instructor = decodedToken.instructor;
     req.clubName = decodedToken.clubName;
-    console.log(req.instructor);
     next();
   } catch (error) {
     const decodedToken = jwt.verify(token, config.get("instructorSecret"));

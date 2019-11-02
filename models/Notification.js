@@ -7,7 +7,16 @@ const notificationSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  notificationMessage: String
+  notificationMessage: String,
+  notificationFrom: String,
+  notificationFromUserId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user"
+  },
+  notificationFromTennisClub: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "tennisClub"
+  }
 });
 
 const Notification = mongoose.model("notification", notificationSchema);
