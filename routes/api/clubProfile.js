@@ -29,23 +29,51 @@ router.get("/myclub", adminAuth, async (req, res) => {
 
 router.post("/", adminAuth, async (req, res) => {
   try {
+    console.log(req.body);
+    const instructorsBeingCurrentlyAdded = [];
     let clubProfileFields = {};
     let instructorsArray = [];
     let servicesArray = [];
     let otherServices = [];
 
     if (req.body.instructors && req.body.instructors.length > 0) {
-      for (let i = 0; i < req.body.instructors.length; i++) {
-        let loneInstructor = await Instructor.findById({
-          _id: req.body.instructors[i]
-        });
-        loneInstructor.requestFrom = req.admin.clubId;
-        loneInstructor.requestPending = true;
-        await loneInstructor.save();
-        instructorsArray.push(req.body.instructors[i]);
+      let tennisClub = await ClubProfile.findOne({
+        tennisClub: req.body.tennisClub
+      });
+
+      if (tennisClub && tennisClub.instructors.length > 0) {
+        const previousInstructorsAndNew = [...tennisClub.instructors];
+        for (let i = 0; i < req.body.instructors.length; i++) {
+          let loneInstructor = await Instructor.findById({
+            _id: req.body.instructors[i]
+          });
+          loneInstructor.requestFrom = req.admin.clubId;
+          loneInstructor.requestPending = true;
+          instructorsBeingCurrentlyAdded.push({
+            fullName: loneInstructor.fullName
+          });
+          previousInstructorsAndNew.push(req.body.instructors[i]);
+          await loneInstructor.save();
+        }
+        clubProfileFields.instructors = previousInstructorsAndNew;
+      } else {
+        console.log("running");
+        for (let i = 0; i < req.body.instructors.length; i++) {
+          let loneInstructor = await Instructor.findById({
+            _id: req.body.instructors[i]
+          });
+          loneInstructor.requestFrom = req.admin.clubId;
+          loneInstructor.requestPending = true;
+          instructorsBeingCurrentlyAdded.push({
+            fullName: loneInstructor.fullName
+          });
+          await loneInstructor.save();
+          instructorsArray.push(req.body.instructors[i]);
+        }
+        clubProfileFields.instructors = instructorsArray;
       }
-      clubProfileFields.instructors = instructorsArray;
     }
+    const instructorsForInstantAdd = [];
 
     if (req.body.instructors && req.body.instructors.length < 1) {
       clubProfileFields.instructors = [];
@@ -88,11 +116,75 @@ router.post("/", adminAuth, async (req, res) => {
         { $set: clubProfileFields },
         { new: true }
       );
-      return res.json(clubProfile);
+      return res.json({
+        clubProfile,
+        instructorsForInstantAdd: instructorsBeingCurrentlyAdded
+      });
     } else {
       clubProfile = new ClubProfile(clubProfileFields);
       await clubProfile.save();
       res.json(clubProfile);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/instructorDeleteFromClub", async (req, res) => {
+  try {
+    let tennisClubProfile = await ClubProfile.findOne({
+      tennisClub: req.body.tennisClub
+    });
+    tennisClubProfile.instructors = req.body.instructors;
+    await tennisClubProfile.save();
+    res.status(200).send({ newInstructors: tennisClubProfile.instructors });
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+  }
+});
+
+router.post("/addInstructorsToClub", async (req, res) => {
+  try {
+    let tennisClubProfile = await ClubProfile.findOne({
+      tennisClub: req.body.tennisClub
+    });
+    function checkIfDuplicates() {
+      const instructorIds = [
+        ...req.body.instructors,
+        ...tennisClubProfile.instructors
+      ];
+      let sendError = "No Error";
+      for (let x = 0; x < instructorIds.length; x++) {
+        for (let y = 0; y < instructorIds.length; y++) {
+          console.log(
+            instructorIds[x] === instructorIds[y],
+            instructorIds[x],
+            instructorIds[y]
+          );
+          if (instructorIds[x] === instructorIds[y] && x !== y) {
+            console.log("ding ding");
+            sendError = "You can not add the same instructor twice.";
+            return sendError;
+          }
+        }
+      }
+      return sendError;
+    }
+    if (checkIfDuplicates() === "No Error") {
+      let instructorsForInstantAdd = [];
+      tennisClubProfile.instructors.push(...req.body.instructors);
+      tennisClubProfile.save();
+      for (let z = 0; z < req.body.instructors.length; z++) {
+        let instructor = await Instructor.findOne({
+          _id: req.body.instructors[z]
+        });
+        instructorsForInstantAdd.push(instructor);
+      }
+      res.status(200).json({
+        tennisClubProfile,
+        instructorsForInstantAdd: instructorsForInstantAdd
+      });
     }
   } catch (error) {
     console.log(error);
