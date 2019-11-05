@@ -38,7 +38,7 @@ router.post("/updateread", async (req, res) => {
       console.log(error);
     }
   } else {
-    res.status(200).json({ failure: "notificationIds.length was less than 0" });
+    res.status(200).json({ failure: "notificationIds.length was less than 1" });
   }
 });
 
@@ -72,7 +72,6 @@ router.post("/instructoraddedtoclubnotification", async (req, res) => {
       notificationMessage: `You have been added as an instructor by ${tennisClub.clubName}. If you work here, accept this request and you will now be a registered employee of this Tennis Club.`
     });
     for (let i = 0; i < req.body.instructors.length; i++) {
-      console.log(req.body.instructors[i], "HELLLLLO");
       const instructor = await Instructor.findById({
         _id: req.body.instructors[i]
       });
