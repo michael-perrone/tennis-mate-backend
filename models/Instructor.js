@@ -29,10 +29,6 @@ const InstructorSignUpSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  clubLeftOrDenied: {
-    type: Boolean,
-    default: false
-  },
   bookings: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,14 +36,6 @@ const InstructorSignUpSchema = new mongoose.Schema({
     }
   ],
   tennisClubTeachingAt: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "tennisClub"
-  },
-  requestPending: {
-    type: Boolean,
-    default: false
-  },
-  requestFrom: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "tennisClub"
   },

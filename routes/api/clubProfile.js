@@ -3,6 +3,8 @@ const router = express.Router();
 const adminAuth = require("../../middleware/authAdmin");
 const ClubProfile = require("../../models/ClubProfile");
 const Instructor = require("../../models/Instructor");
+const Notification = require("../../models/Notification");
+const TennisClub = require("../../models/TennisClub");
 
 router.get("/myclub", adminAuth, async (req, res) => {
   try {
@@ -11,10 +13,16 @@ router.get("/myclub", adminAuth, async (req, res) => {
     }).populate("tennisClub", ["clubname"]);
     if (clubProfile) {
       const instructorsToSendBack = await Instructor.find({
-        _id: clubProfile.instructors
+        _id: clubProfile.instructorsToSendInvite
       });
 
-      clubProfile.instructors = instructorsToSendBack;
+      clubProfile.instructorsToSendInvite = instructorsToSendBack;
+
+      const instructorsAlreadyHere = await Instructor.find({
+        _id: clubProfile.instructorsWhoAccepted
+      });
+
+      clubProfile.instructorsWhoAccepted = instructorsAlreadyHere;
       return res.status(200).json({ clubProfile, profileCreated: true });
     }
     if (!clubProfile) {
@@ -89,16 +97,15 @@ router.post("/instructorDeleteFromClub", async (req, res) => {
     let tennisClubProfile = await ClubProfile.findOne({
       tennisClub: req.body.tennisClub
     });
-    tennisClubProfile.instructors = req.body.instructors;
-    await tennisClubProfile.save();
-    const instructorsToSendBack = [];
-    for (let i = 0; i < req.body.instructors.length; i++) {
-      let instructorForSending = await Instructor.findOne({
-        _id: req.body.instructors[i]
+    tennisClubProfile.instructorsWhoAccepted = req.body.instructors;
+    for (let i = 0; i < req.body.deletedInstructors.length; i++) {
+      let instructor = await Instructor.findOne({
+        _id: req.body.deletedInstructors[i]._id
       });
-      instructorsToSendBack.push(instructorForSending);
+      instructor.tennisClub = "No Current Club";
+      instructor.clubAccepted = false;
     }
-
+    await tennisClubProfile.save();
     res.status(200).send();
   } catch (error) {
     console.log(error);
@@ -117,18 +124,41 @@ router.post("/addInstructorsToClub", async (req, res) => {
       function checkIfDuplicates() {
         let sendError = "No Error";
         for (let x = 0; x < req.body.instructors.length; x++) {
-          for (let y = 0; y < tennisClubProfile.instructors.length; y++) {
-            if (req.body.instructors[x] == tennisClubProfile.instructors[y]) {
+          for (
+            let y = 0;
+            y < tennisClubProfile.instructorsToSendInvite.length;
+            y++
+          ) {
+            if (
+              req.body.instructors[x] ==
+              tennisClubProfile.instructorsToSendInvite[y]
+            ) {
               sendError = "You can not add the same instructor twice.";
               return sendError;
+            }
+            for (
+              let z = 0;
+              z < tennisClubProfile.instructorsWhoAccepted.length;
+              z++
+            ) {
+              if (
+                req.body.instructors[x] ==
+                tennisClubProfile.instructorsWhoAccepted[z]
+              ) {
+                sendError =
+                  "One of these instructors is already registered at your club.";
+              }
             }
           }
         }
         return sendError;
       }
       if (checkIfDuplicates() === "No Error") {
+        let tennisClub = await TennisClub.findOne({
+          _id: req.body.tennisClub
+        });
         let instructorsForInstantAdd = [];
-        tennisClubProfile.instructors.push(...req.body.instructors);
+        tennisClubProfile.instructorsToSendInvite.push(...req.body.instructors);
         tennisClubProfile.save();
         for (let z = 0; z < req.body.instructors.length; z++) {
           let instructor = await Instructor.findOne({
@@ -137,6 +167,17 @@ router.post("/addInstructorsToClub", async (req, res) => {
           instructorsForInstantAdd.push(instructor);
           instructor.requestFrom = req.body.tennisClub;
           instructor.requestPending = true;
+
+          let newNotification = new Notification({
+            notificationType: "Club Added Instructor",
+            notificationDate: new Date(),
+            notificationFromTennisClub: tennisClub._id,
+            notificationMessage: `You have been added as an instructor by ${tennisClub.clubName}. If you work here, accept this request and you will now be a registered employee of this Tennis Club.`
+          });
+          instructor.notifications.push(newNotification);
+          console.log(newNotification);
+          await newNotification.save();
+          await instructor.save();
         }
         res.status(200).json({
           tennisClubProfile,
@@ -148,7 +189,7 @@ router.post("/addInstructorsToClub", async (req, res) => {
     } else {
       if (req.body.instructors.length > 0) {
         let clubProfile = new ClubProfile({
-          instructors: req.body.instructors,
+          instructorsToSendInvite: req.body.instructors,
           tennisClub: req.body.tennisClub
         });
         await clubProfile.save();
