@@ -14,7 +14,6 @@ router.get("/instructornotifications", instructorAuth, async (req, res) => {
       let notification = await Notification.findOne({
         _id: instructor.notifications[i]
       });
-      console.log(notification);
       if (notification) {
         notificationArray.push(notification);
       }
@@ -47,16 +46,17 @@ router.post("/updateread", async (req, res) => {
 router.post("/instructorclickedyes", async (req, res) => {
   try {
     const instructor = await Instructor.findOne({ _id: req.body.instructorId });
-    instructor.tennisClubTeachingAt = req.body.clubId;
-    instructor.tennisClub = req.body.clubName;
-    instructor.clubAccepted = true;
-    await instructor.save();
     let notification = await Notification.findOne({
       _id: req.body.notificationId
     });
-    const tennisClubProfile = await ClubProfile.findOne({
+     const tennisClubProfile = await ClubProfile.findOne({
       tennisClub: notification.notificationFromTennisClub
-    });
+    }).populate("tennisClub", ["clubName"]);
+    instructor.tennisClub = tennisClubProfile.tennisClub.clubName;
+    console.log(instructor.tennisClub)
+    instructor.clubAccepted = true;
+    await instructor.save();
+    
     if (tennisClubProfile && instructor) {
       const newInstructorsAfterOneTakenOut = tennisClubProfile.instructorsToSendInvite.filter(
         element => {

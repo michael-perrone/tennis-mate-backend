@@ -16,7 +16,9 @@ router.post("/", async (req, res) => {
     });
     clubAndProfileInfo.profile = clubsProfile;
     if (clubsProfile) {
-      instructors = await Instructor.find({ _id: clubsProfile.instructors });
+      instructors = await Instructor.find({
+        _id: clubsProfile.instructorsWhoAccepted
+      });
     }
   }
 

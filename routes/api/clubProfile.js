@@ -10,7 +10,8 @@ router.get("/myclub", adminAuth, async (req, res) => {
   try {
     let clubProfile = await ClubProfile.findOne({
       tennisClub: req.admin.clubId
-    }).populate("tennisClub", ["clubname"]);
+    })
+    console.log(clubProfile)
     if (clubProfile) {
       const instructorsToSendBack = await Instructor.find({
         _id: clubProfile.instructorsToSendInvite
@@ -104,6 +105,7 @@ router.post("/instructorDeleteFromClub", async (req, res) => {
       });
       instructor.tennisClub = "No Current Club";
       instructor.clubAccepted = false;
+      await instructor.save();
     }
     await tennisClubProfile.save();
     res.status(200).send();
@@ -174,8 +176,7 @@ router.post("/addInstructorsToClub", async (req, res) => {
             notificationFromTennisClub: tennisClub._id,
             notificationMessage: `You have been added as an instructor by ${tennisClub.clubName}. If you work here, accept this request and you will now be a registered employee of this Tennis Club.`
           });
-          instructor.notifications.push(newNotification);
-          console.log(newNotification);
+          instructor.notifications.unshift(newNotification);
           await newNotification.save();
           await instructor.save();
         }
