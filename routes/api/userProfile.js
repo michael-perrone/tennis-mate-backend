@@ -1,22 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const authUser = require("../../middleware/authUser");
-const UserProfile = require("../../models/UserProfile");
 const User = require("../../models/User");
 
 router.get("/myprofile", authUser, async (req, res) => {
   try {
-    const profile = await UserProfile.findOne({ user: req.user.id }).populate(
-      "user",
-      ["firstName", "lastName"]
-    );
-    if (!profile) {
-      let profileBeingCreatedUser = await User.findOne({ _id: req.user.id });
-      return res.status(200).json({
-        profileCreated: false,
-        firstName: profileBeingCreatedUser.firstName
-      });
-    }
+    const profile = await User.findOne({ _id: req.user.id });
+    console.log(profile);
     if (profile) {
       res.status(200).json({ profile });
     }
@@ -26,76 +16,8 @@ router.get("/myprofile", authUser, async (req, res) => {
   }
 });
 
-router.post("/", authUser, async (req, res) => {
-  try {
-    const profileFields = {};
-    profileFields.user = req.user.id;
-    if (req.body.yearsOfPlaying) {
-      profileFields.yearsOfPlaying = req.body.yearsOfPlaying;
-    }
-    if (req.body.experience) {
-      profileFields.experience = req.body.experience;
-    }
-    if (req.body.lookingFor) {
-      profileFields.lookingFor = req.body.lookingFor;
-    }
-    if (req.body.bio) {
-      profileFields.bio = req.body.bio;
-    }
-
-    let userProfile = await UserProfile.findOne({ user: req.user.id });
-    if (userProfile) {
-      userProfile = await UserProfile.findOneAndUpdate(
-        { user: req.user.id },
-        { $set: profileFields },
-        { new: true }
-      );
-      return res.json(userProfile);
-    } else {
-      userProfile = new UserProfile(profileFields);
-      await userProfile.save();
-      res.json({ profileFields });
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
-
-router.get("/", async (req, res) => {
-  try {
-    const profiles = await UserProfile.find().populate("user", [
-      "firstName",
-      "lastName"
-    ]);
-    res.json(profiles);
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).send("server error");
-  }
-});
-router.get("/user/:user_id", async (req, res) => {
-  try {
-    const profile = await UserProfile.findOne({
-      user: req.params.user_id
-    }).populate("user", ["firstName", "lastName"]);
-    if (!profile) {
-      return res.status(400).json({ msg: "There is no profile" });
-    } else {
-      res.send(profile);
-    }
-  } catch (error) {
-    console.log(error.message);
-    if (error.kind === "ObjectId") {
-      return res.status(400).json({ msg: "There is no user" });
-    }
-    res.status(500).send("server error");
-  }
-});
-
 router.delete("/", authUser, async (req, res) => {
   try {
-    await UserProfile.findOneAndRemove({ user: req.user.id });
-
     await User.findOneAndRemove({ _id: req.user.id });
 
     res.json({ msg: "User Removed" });
