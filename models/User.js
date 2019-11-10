@@ -45,6 +45,10 @@ const UserSchema = new mongoose.Schema({
   locationDenied: {
     type: Boolean,
     default: false
+  },
+  clubsSubscribedTo: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "tennisClub"
   }
 });
 
