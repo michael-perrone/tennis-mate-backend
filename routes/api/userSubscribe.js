@@ -8,7 +8,8 @@ router.post("/", async (req, res) => {
     let subscriberExists = await TennisClub.find({
       subscribers: req.body.userId
     });
-    if (subscriberExists) {
+    if (subscriberExists.length) {
+      console.log(subscriberExists);
       return res
         .status(406)
         .json({ error: "You have already subscribed to this club" });

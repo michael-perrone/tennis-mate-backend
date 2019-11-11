@@ -6,7 +6,6 @@ const User = require("../../models/User");
 router.get("/myprofile", authUser, async (req, res) => {
   try {
     const profile = await User.findOne({ _id: req.user.id });
-    console.log(profile);
     if (profile) {
       res.status(200).json({ profile });
     }
