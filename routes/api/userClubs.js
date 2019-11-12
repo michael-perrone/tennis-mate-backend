@@ -5,7 +5,8 @@ const User = require("../../models/User");
 const TennisClub = require("../../models/TennisClub");
 
 router.get("/", userAuth, async (req, res) => {
-  const tennisClubs = await TennisClub.find({ subscribers: req.user.id });
+  const tennisClubs = await TennisClub.find({ followers: req.user.id });
+  console.log(tennisClubs);
   if (tennisClubs.length) {
     return res.status(200).json({ tennisClubs });
   } else {

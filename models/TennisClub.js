@@ -49,7 +49,7 @@ const TennisClubSchema = new mongoose.Schema({
   bio: {
     type: String
   },
-  subscribers: {
+  followers: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "user"
   },

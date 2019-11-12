@@ -32,7 +32,7 @@ router.post("/updateread", async (req, res) => {
           _id: req.body.notificationIds[i]
         });
         notification.notificationRead = true;
-        notification.save();
+        await notification.save();
       }
       res.status(200).send();
     } catch (error) {
@@ -49,14 +49,14 @@ router.post("/instructorclickedyes", async (req, res) => {
     let notification = await Notification.findOne({
       _id: req.body.notificationId
     });
-     const tennisClubProfile = await ClubProfile.findOne({
+    const tennisClubProfile = await ClubProfile.findOne({
       tennisClub: notification.notificationFromTennisClub
     }).populate("tennisClub", ["clubName"]);
     instructor.tennisClub = tennisClubProfile.tennisClub.clubName;
-    console.log(instructor.tennisClub)
+    console.log(instructor.tennisClub);
     instructor.clubAccepted = true;
     await instructor.save();
-    
+
     if (tennisClubProfile && instructor) {
       const newInstructorsAfterOneTakenOut = tennisClubProfile.instructorsToSendInvite.filter(
         element => {

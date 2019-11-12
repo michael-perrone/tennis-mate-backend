@@ -46,7 +46,7 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  clubsSubscribedTo: {
+  clubsFollowing: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: "tennisClub"
   }
