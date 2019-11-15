@@ -7,7 +7,6 @@ const authUser = require("../../middleware/authUser");
 
 router.get("/clubsFromCurrentLocation", authUser, async (req, res) => {
   let user = await User.findOne({ _id: req.user.id });
-  console.log("WDWHDJWHDJAHDWJHDJWAHDJWAHDAJWHD", user);
   let tennisClubsFromCity = await TennisClub.find({ city: user.locationTown });
   if (tennisClubsFromCity.length > 0) {
     let clubsAndProfilesToSendBack = [];
@@ -50,6 +49,13 @@ router.get("/clubsFromCurrentLocation", authUser, async (req, res) => {
 });
 
 router.post("/clubSearch", authUser, async (req, res) => {
+  // state
+  // zip
+  // city
+  // state zip
+  // state city
+  // state zip city
+  // city zip
   if (req.body.state !== "" && req.body.zip === "" && req.body.city === "") {
     let tennisClubsByState = await TennisClub.find({ state: req.body.state });
     if (tennisClubsByState.length > 0) {
@@ -67,6 +73,10 @@ router.post("/clubSearch", authUser, async (req, res) => {
         }
       }
       return res.json({ tennisClubsBack: clubAndProfileState });
+    } else {
+      return res
+        .status(406)
+        .json({ message: "Your search did not return any results." });
     }
   } else if (
     req.body.state === "" &&
@@ -88,6 +98,10 @@ router.post("/clubSearch", authUser, async (req, res) => {
         }
       }
       return res.json({ tennisClubsBack: clubsAndProfileZip });
+    } else {
+      return res
+        .status(406)
+        .json({ message: "Your search did not return any results." });
     }
   } else if (
     req.body.state === "" &&
@@ -117,22 +131,161 @@ router.post("/clubSearch", authUser, async (req, res) => {
           clubsThatMatchCity.push(allClubs[i]);
         }
       }
-      let clubsAndProfile = [];
-      for (let z = 0; z < clubsThatMatchCity.length; z++) {
-        let clubProfileFound = await ClubProfile.findOne({
-          tennisClub: clubsThatMatchCity[z]._id
+      if (clubsThatMatchCity.length > 0) {
+        let clubsAndProfile = [];
+        for (let z = 0; z < clubsThatMatchCity.length; z++) {
+          let clubProfileFound = await ClubProfile.findOne({
+            tennisClub: clubsThatMatchCity[z]._id
+          });
+          if (clubProfileFound) {
+            clubsAndProfile.push({
+              club: clubsThatMatchCity[z],
+              profile: clubProfileFound
+            });
+          }
+        }
+        if (clubsAndProfile.length > 0) {
+          return res.status(200).json({ tennisClubsBack: clubsAndProfile });
+        }
+      } else {
+        return res
+          .status(406)
+          .json({ message: "Your search did not return any results." });
+      }
+    }
+  } else if (
+    req.body.state !== "" &&
+    req.body.zip !== "" &&
+    req.body.city === ""
+  ) {
+    let tennisClubsFromStateAndZip = await TennisClub.find({
+      state: req.body.state,
+      zip: req.body.zip
+    });
+    if (tennisClubsFromStateAndZip.length > 0) {
+      let clubAndProfileFromStateAndZip = [];
+      for (let i = 0; i < tennisClubsFromStateAndZip.length; i++) {
+        let profileFromStateAndZip = await ClubProfile.findOne({
+          tennisClub: tennisClubsFromStateAndZip[i]._id
         });
-        if (clubProfileFound) {
-          clubsAndProfile.push({
-            club: clubsThatMatchCity[z],
-            profile: clubProfileFound
+        if (profileFromStateAndZip) {
+          clubAndProfileFromStateAndZip.push({
+            club: tennisClubsFromStateAndZip[i],
+            profile: profileFromStateAndZip
           });
         }
       }
-      if (clubsAndProfile.length > 0) {
-        return res.status(200).json({ tennisClubsBack: clubsAndProfile });
+      if (clubAndProfileFromStateAndZip.length > 0) {
+        return res
+          .status(200)
+          .json({ tennisClubsBack: clubAndProfileFromStateAndZip });
       }
+    } else {
+      return res
+        .status(406)
+        .json({ message: "Your search did not return any results." });
     }
+  } else if (
+    req.body.state !== "" &&
+    req.body.zip === "" &&
+    req.body.city !== ""
+  ) {
+    let tennisClubsFromStateAndCity = await TennisClub.find({
+      state: req.body.state,
+      city: req.body.city
+    });
+    if (tennisClubsFromStateAndCity.length > 0) {
+      let clubAndProfileFromStateAndCity = [];
+      for (let i = 0; i < tennisClubsFromStateAndCity.length; i++) {
+        let profileFromStateAndCity = await ClubProfile.findOne({
+          tennisClub: tennisClubsFromStateAndCity[i]
+        });
+        if (profileFromStateAndCity) {
+          clubAndProfileFromStateAndCity.push({
+            club: tennisClubsFromStateAndCity[i],
+            profile: profileFromStateAndCity
+          });
+        }
+      }
+      if (clubAndProfileFromStateAndCity.length > 0) {
+        return res
+          .status(200)
+          .json({ tennisClubsBack: clubAndProfileFromStateAndCity });
+      }
+    } else {
+      return res
+        .status(406)
+        .json({ message: "Your search did not return any results." });
+    }
+  } else if (
+    req.body.state !== "" &&
+    req.body.zip !== "" &&
+    req.body.city !== ""
+  ) {
+    let tennisClubsFromStateAndCityAndZip = await TennisClub.find({
+      state: req.body.state,
+      city: req.body.city,
+      zip: req.body.zip
+    });
+    if (tennisClubsFromStateAndCityAndZip.length > 0) {
+      let clubAndProfileFromStateAndCityAndZip = [];
+      for (let i = 0; i < tennisClubsFromStateAndCityAndZip.length; i++) {
+        let profileFromStateAndCityAndZip = await ClubProfile.findOne({
+          tennisClub: tennisClubsFromStateAndCityAndZip[i]
+        });
+        if (profileFromStateAndCityAndZip) {
+          clubAndProfileFromStateAndCityAndZip.push({
+            club: tennisClubsFromStateAndCityAndZip[i],
+            profile: profileFromStateAndCityAndZip
+          });
+        }
+      }
+      if (clubAndProfileFromStateAndCityAndZip.length > 0) {
+        return res
+          .status(200)
+          .json({ tennisClubsBack: clubAndProfileFromStateAndCityAndZip });
+      }
+    } else {
+      return res
+        .status(406)
+        .json({ message: "Your search did not return any results." });
+    }
+  } else if (
+    req.body.state === "" &&
+    req.body.zip !== "" &&
+    req.body.city !== ""
+  ) {
+    let tennisClubsFromZipAndCity = await TennisClub.find({
+      zip: req.body.zip,
+      city: req.body.city
+    });
+    if (tennisClubsFromZipAndCity.length > 0) {
+      let clubAndProfileFromZipAndCity = [];
+      for (let i = 0; i < tennisClubsFromZipAndCity.length; i++) {
+        let profileFromZipAndCity = await ClubProfile.findOne({
+          tennisClub: tennisClubsFromZipAndCity[i]
+        });
+        if (profileFromZipAndCity) {
+          clubAndProfileFromZipAndCity.push({
+            club: tennisClubsFromZipAndCity[i],
+            profile: profileFromZipAndCity
+          });
+        }
+      }
+      if (clubAndProfileFromZipAndCity.length > 0) {
+        return res
+          .status(200)
+          .json({ tennisClubsBack: clubAndProfileFromZipAndCity });
+      }
+    } else {
+      return res
+        .status(406)
+        .json({ message: "Your search did not return any results." });
+    }
+  } else {
+    return res
+      .status(406)
+      .json({ message: "Your search did not return any results." });
   }
 });
 
