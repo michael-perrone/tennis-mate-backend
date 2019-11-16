@@ -72,7 +72,10 @@ router.post("/instructorclickedyes", async (req, res) => {
     }
     notification.answer = "Accepted";
     await notification.save();
-    res.status(200).json({ instructor: instructor });
+    let notifications = await Notification.find({
+      _id: instructor.notifications
+    });
+    res.status(200).json({ newNotifications: notifications });
   } catch (error) {
     console.log(error);
   }

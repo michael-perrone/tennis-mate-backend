@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
     }
     let tennisClub = await TennisClub.findOne({ _id: req.body.tennisClubId });
     if (tennisClub) {
-      tennisClub.subscribers.unshift(req.body.userId);
+      tennisClub.followers.unshift(req.body.userId);
       await tennisClub.save();
     }
     let user = await User.findOne({ _id: req.body.userId });
