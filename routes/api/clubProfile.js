@@ -10,8 +10,8 @@ router.get("/myclub", adminAuth, async (req, res) => {
   try {
     let clubProfile = await ClubProfile.findOne({
       tennisClub: req.admin.clubId
-    })
-    console.log(clubProfile)
+    });
+    console.log(clubProfile);
     if (clubProfile) {
       const instructorsToSendBack = await Instructor.find({
         _id: clubProfile.instructorsToSendInvite
@@ -112,6 +112,18 @@ router.post("/instructorDeleteFromClub", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500);
+  }
+});
+
+router.get("/profileexists", adminAuth, async (req, res) => {
+  const tennisClub = await TennisClub.findOne({ _id: req.admin.clubId });
+  if (tennisClub) {
+    const profile = await ClubProfile.findOne({ tennisClub: req.admin.clubId });
+    if (profile) {
+      res.status(200).json({ success: "success" });
+    } else {
+      res.status(200).json({ failure: "failure" });
+    }
   }
 });
 
