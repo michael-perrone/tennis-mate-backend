@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const User = require("../../models/User");
 const Instructor = require("../../models/Instructor");
+const ClubProfile = require("../../models/ClubProfile");
 
 router.post(
   "/",

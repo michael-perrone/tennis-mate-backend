@@ -16,7 +16,10 @@ router.post("/instructorSearch", async (req, res) => {
   }
 
   if (instructorsFromSearch.length > 0) {
-    res.status(200).json({ instructors: instructorsFromSearch });
+    return res.status(200).json({ instructors: instructorsFromSearch });
+  }
+  if (instructorsFromSearch === null || instructorsFromSearch.length === 0) {
+    return res.status(406).json({ error: "No Instructors Found" });
   }
 });
 

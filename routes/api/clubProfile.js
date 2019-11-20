@@ -11,23 +11,34 @@ router.get("/myclub", adminAuth, async (req, res) => {
     let clubProfile = await ClubProfile.findOne({
       tennisClub: req.admin.clubId
     });
-    console.log(clubProfile);
     if (clubProfile) {
-      const instructorsToSendBack = await Instructor.find({
+      const instructors = await Instructor.find({
         _id: clubProfile.instructorsToSendInvite
       });
 
-      clubProfile.instructorsToSendInvite = instructorsToSendBack;
+      let instructorsToSendBack = [];
+
+      for (let i = 0; i < instructors.length; i++) {
+        let newObject = {
+          id: instructors[i]._id,
+          name: instructors[i].fullName
+        };
+        instructorsToSendBack.push(newObject);
+      }
 
       const instructorsAlreadyHere = await Instructor.find({
         _id: clubProfile.instructorsWhoAccepted
       });
 
       clubProfile.instructorsWhoAccepted = instructorsAlreadyHere;
-      return res.status(200).json({ clubProfile, profileCreated: true });
+      return res.status(200).json({
+        clubProfile,
+        profileCreated: true,
+        idAndName: instructorsToSendBack
+      });
     }
     if (!clubProfile) {
-      return res.status(200).json({ profileCreated: false });
+      return res.status(406).json({ profileCreated: false });
     }
   } catch (error) {
     console.log(error);
@@ -115,15 +126,28 @@ router.post("/instructorDeleteFromClub", async (req, res) => {
   }
 });
 
-router.get("/profileexists", adminAuth, async (req, res) => {
-  const tennisClub = await TennisClub.findOne({ _id: req.admin.clubId });
-  if (tennisClub) {
-    const profile = await ClubProfile.findOne({ tennisClub: req.admin.clubId });
-    if (profile) {
-      res.status(200).json({ success: "success" });
-    } else {
-      res.status(200).json({ failure: "failure" });
-    }
+router.post("/getInstructorsPendingAndAccepted", async (req, res) => {
+  let instructorsPending = await Instructor.find({ _id: req.body.pending });
+  let pending = [];
+  for (let i = 0; i < instructorsPending.length; i++) {
+    pending.push({
+      id: instructorsPending[i]._id,
+      name: instructorsPending[i].fullName
+    });
+  }
+  let instructorsAccepted = await Instructor.find({ _id: req.body.accepted });
+  let accepted = [];
+  for (let i = 0; i < instructorsAccepted.length; i++) {
+    accepted.push({
+      id: instructorsAccepted[i]._id,
+      name: instructorsAccepted[i].fullName
+    });
+  }
+
+  if (accepted.length > 0 || pending.length > 0) {
+    console.log(accepted);
+    console.log(pending);
+    res.status(200).json({ accepted, pending });
   }
 });
 
@@ -200,7 +224,9 @@ router.post("/addInstructorsToClub", async (req, res) => {
         res.status(406).json({ error: checkIfDuplicates() });
       }
     } else {
+      console.log("here");
       if (req.body.instructors.length > 0) {
+        console.log(req.body.tennisClub);
         let clubProfile = new ClubProfile({
           instructorsToSendInvite: req.body.instructors,
           tennisClub: req.body.tennisClub
