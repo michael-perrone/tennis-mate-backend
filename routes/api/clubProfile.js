@@ -47,7 +47,6 @@ router.get("/myclub", adminAuth, async (req, res) => {
 
 router.post("/", adminAuth, async (req, res) => {
   try {
-    console.log(req.body);
     const instructorsBeingCurrentlyAdded = [];
     let clubProfileFields = {};
     let servicesArray = [];
@@ -109,14 +108,73 @@ router.post("/instructorDeleteFromClub", async (req, res) => {
     let tennisClubProfile = await ClubProfile.findOne({
       tennisClub: req.body.tennisClub
     });
-    tennisClubProfile.instructorsWhoAccepted = req.body.instructors;
-    for (let i = 0; i < req.body.deletedInstructors.length; i++) {
+    const newInstructors = tennisClubProfile.instructorsWhoAccepted.filter(
+      instructor => {
+        return !req.body.instructors.includes(instructor.toString());
+      }
+    );
+
+    tennisClubProfile.instructorsWhoAccepted = newInstructors;
+
+    for (let i = 0; i < req.body.instructors.length; i++) {
       let instructor = await Instructor.findOne({
-        _id: req.body.deletedInstructors[i]._id
+        _id: req.body.instructors[i]
       });
       instructor.tennisClub = "No Current Club";
       instructor.clubAccepted = false;
       await instructor.save();
+    }
+    await tennisClubProfile.save();
+    res.status(200).send();
+  } catch (error) {
+    console.log(error);
+    res.status(500);
+  }
+});
+
+router.post("/removeFromPending", async (req, res) => {
+  try {
+    let tennisClubProfile = await ClubProfile.findOne({
+      tennisClub: req.body.tennisClub
+    });
+    const newInstructors = tennisClubProfile.instructorsToSendInvite.filter(
+      instructor => {
+        return !req.body.instructors.includes(instructor.toString());
+      }
+    );
+
+    tennisClubProfile.instructorsToSendInvite = newInstructors;
+
+    for (let i = 0; i < req.body.instructors.length; i++) {
+      let instructor = await Instructor.findOne({
+        _id: req.body.instructors[i]
+      });
+      let notificationUpHere = await Notification.findOne({
+        instructorId: req.body.instructors[i],
+        notificationFromTennisClub: req.body.tennisClub,
+        notificationType: "Club Added Instructor"
+      });
+
+      let newinstructorNotifications = instructor.notifications.filter(
+        notification => {
+          return notification !== notificationUpHere._id;
+        }
+      );
+
+      instructor.notifications = newinstructorNotifications;
+
+      await instructor.save();
+
+      await Notification.deleteOne(
+        {
+          instructorId: req.body.instructors[i],
+          notificationFromTennisClub: req.body.tennisClub,
+          notificationType: "Club Added Instructor"
+        },
+        function(error) {
+          console.log(error);
+        }
+      );
     }
     await tennisClubProfile.save();
     res.status(200).send();
@@ -145,20 +203,18 @@ router.post("/getInstructorsPendingAndAccepted", async (req, res) => {
   }
 
   if (accepted.length > 0 || pending.length > 0) {
-    console.log(accepted);
-    console.log(pending);
+
     res.status(200).json({ accepted, pending });
   }
 });
 
 router.post("/addInstructorsToClub", async (req, res) => {
-  console.log(req.body.instructors);
+
   try {
     let tennisClubProfile = await ClubProfile.findOne({
       tennisClub: req.body.tennisClub
     });
     if (tennisClubProfile) {
-      console.log("here");
       function checkIfDuplicates() {
         let sendError = "No Error";
         for (let x = 0; x < req.body.instructors.length; x++) {
@@ -207,6 +263,7 @@ router.post("/addInstructorsToClub", async (req, res) => {
           instructor.requestPending = true;
 
           let newNotification = new Notification({
+            instructorId: instructor._id,
             notificationType: "Club Added Instructor",
             notificationDate: new Date(),
             notificationFromTennisClub: tennisClub._id,
@@ -224,7 +281,6 @@ router.post("/addInstructorsToClub", async (req, res) => {
         res.status(406).json({ error: checkIfDuplicates() });
       }
     } else {
-      console.log("here");
       if (req.body.instructors.length > 0) {
         console.log(req.body.tennisClub);
         let clubProfile = new ClubProfile({
