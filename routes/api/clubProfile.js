@@ -145,6 +145,16 @@ router.post("/removeFromPending", async (req, res) => {
 
     tennisClubProfile.instructorsToSendInvite = newInstructors;
 
+    let pendingRemaining = await Instructor.find({
+      _id: tennisClubProfile.instructorsToSendInvite
+    });
+
+    let pendingToSendBack = [];
+
+    pendingRemaining.forEach(instructor => {
+      pendingToSendBack.push({ id: instructor._id, name: instructor.fullName });
+    });
+
     for (let i = 0; i < req.body.instructors.length; i++) {
       let instructor = await Instructor.findOne({
         _id: req.body.instructors[i]
@@ -203,13 +213,11 @@ router.post("/getInstructorsPendingAndAccepted", async (req, res) => {
   }
 
   if (accepted.length > 0 || pending.length > 0) {
-
     res.status(200).json({ accepted, pending });
   }
 });
 
 router.post("/addInstructorsToClub", async (req, res) => {
-
   try {
     let tennisClubProfile = await ClubProfile.findOne({
       tennisClub: req.body.tennisClub

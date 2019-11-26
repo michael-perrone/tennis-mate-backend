@@ -11,7 +11,11 @@ router.post("/instructorSearch", async (req, res) => {
         .toLowerCase()
         .includes(req.body.name.toLowerCase())
     ) {
-      instructorsFromSearch.push(allInstructors[i]);
+      instructorsFromSearch.push({
+        id: allInstructors[i]._id,
+        name: allInstructors[i].fullName,
+        tennisClub: allInstructors[i].tennisClub
+      });
     }
   }
 
