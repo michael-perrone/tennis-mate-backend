@@ -47,10 +47,19 @@ router.post(
               .status(400)
               .json({ errors: [{ msg: "That email is already being used" }] });
           }
+
+          let realFirstNameArray = req.body.firstName.split("");
+          realFirstNameArray[0] = realFirstNameArray[0].toUpperCase();
+          let realFirstName = realFirstNameArray.join("");
+
+          let realLastNameArray = req.body.lastName.split("");
+          realLastNameArray[0] = realLastNameArray[0].toUpperCase();
+          let realLastName = realLastNameArray.join("");
+
           let newInstructor = new Instructor({
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            fullName: `${req.body.firstName} ${req.body.lastName}`,
+            firstName: realFirstName,
+            lastName: realLastName,
+            fullName: `${realFirstName} ${realLastName}`,
             email: req.body.email,
             phoneNumber: req.body.phoneNumber,
             password: req.body.createPassword,

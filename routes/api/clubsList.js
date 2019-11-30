@@ -5,7 +5,64 @@ const ClubProfile = require("../../models/ClubProfile");
 const TennisClub = require("../../models/TennisClub");
 const authUser = require("../../middleware/authUser");
 
-router.get("/clubsFromCurrentLocation", authUser, async (req, res) => {
+router.post("/clubsFromCurrentLocation", authUser, async (req, res) => {
+  let user = await User.findOne({ _id: req.user.id });
+  let tennisClubsFromCityAndState = await TennisClub.find({
+    city: req.body.city,
+    state: req.body.state
+  });
+  let clubAndProfileFromStateAndCity = [];
+  if (tennisClubsFromCityAndState.length > 0) {
+    for (let i = 0; i < tennisClubsFromCityAndState.length; i++) {
+      let profile = await ClubProfile.findOne({
+        tennisClub: tennisClubsFromCityAndState[i].id
+      });
+      if (profile) {
+        clubAndProfileFromStateAndCity.push({
+          club: tennisClubsFromCityAndState[i],
+          profile
+        });
+      }
+    }
+    if (clubAndProfileFromStateAndCity.length > 0)
+      user.locationState = req.body.state;
+    user.locationTown = req.body.city;
+    user.locationSaved = true;
+    user.locationDenied = false;
+    user.save();
+    res.status(200).json({ clubsBack: clubAndProfileFromStateAndCity });
+  } else {
+    let tennisClubsFromState = await TennisClub.find({ state: req.body.state });
+    if (tennisClubsFromState.length > 0) {
+      let clubAndProfileFromState = [];
+      for (let i = 0; i < tennisClubsFromState.length; i++) {
+        let profile = await ClubProfile.findOne({
+          tennisClub: tennisClubsFromState[i]._id
+        });
+        console.log(profile);
+        clubAndProfileFromState.push({
+          club: tennisClubsFromState[i],
+          profile
+        });
+      }
+      if (clubAndProfileFromState.length > 0) {
+        user.locationState = req.body.state;
+        user.locationTown = req.body.city;
+        user.locationSaved = true;
+        user.locationDenied = false;
+        user.save();
+        res.status(200).json({ clubsBack: clubAndProfileFromState });
+      }
+    } else {
+      res.status(404).json({
+        error:
+          "No Clubs found based on your location, please use the search bar."
+      });
+    }
+  }
+});
+
+router.get("/clubsFromSavedLocation", authUser, async (req, res) => {
   let user = await User.findOne({ _id: req.user.id });
   let tennisClubsFromCity = await TennisClub.find({ city: user.locationTown });
   if (tennisClubsFromCity.length > 0) {

@@ -9,6 +9,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  fullName: {
+    type: String
+  },
   email: {
     type: String,
     required: true,
@@ -22,15 +25,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  age: {
-    type: String
-  },
-  gender: {
-    type: String
-  },
-  skillLevel: {
-    type: String
-  },
   locationState: {
     type: String,
     default: "No Location Saved"
@@ -40,7 +34,8 @@ const UserSchema = new mongoose.Schema({
     default: "No Location Saved"
   },
   locationSaved: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   locationDenied: {
     type: Boolean,

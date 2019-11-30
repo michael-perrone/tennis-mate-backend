@@ -24,9 +24,16 @@ router.post("/", async (req, res) => {
   }
 
   if (!user) {
+    let firstNameUnAltered = req.body.firstName.split("");
+    firstNameUnAltered[0] = firstNameUnAltered[0].toUpperCase();
+    let firstName = firstNameUnAltered.join("");
+    let lastNameUnAltered = req.body.lastName.split("");
+    lastNameUnAltered[0] = lastNameUnAltered[0].toUpperCase();
+    let lastName = lastNameUnAltered.join("");
     let newUser = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      firstName: firstName,
+      lastName: lastName,
+      fullName: req.body.firstName + " " + req.body.lastName,
       email: req.body.email,
       phoneNumber: req.body.phoneNumber,
       password: req.body.createPassword,

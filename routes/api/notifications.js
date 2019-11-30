@@ -55,6 +55,7 @@ router.post("/instructorclickedyes", async (req, res) => {
     instructor.tennisClub = tennisClubProfile.tennisClub.clubName;
     console.log(instructor.tennisClub);
     instructor.clubAccepted = true;
+    instructor.tennisClubTeachingAt = notification.notificationFromTennisClub;
     await instructor.save();
 
     if (tennisClubProfile && instructor) {
